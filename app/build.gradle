@@ -1,20 +1,32 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'            // Kotlin 注解处理
+    id 'androidx.navigation.safeargs.kotlin' // 可选：Navigation Safe Args
 }
 
 android {
     namespace 'com.zs.my_zs_jetpack'
-    compileSdk 35
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.zs.my_zs_jetpack"
         minSdk 24
-        targetSdk 35
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Room 数据库配置
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation": "$projectDir/schemas".toString(),
+                        "room.incremental": "true"
+                ]
+            }
+        }
     }
 
     buildTypes {
@@ -22,6 +34,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    // 启用 DataBinding 和 ViewBinding
+    buildFeatures {
+        dataBinding true
+        viewBinding true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -33,13 +50,55 @@ android {
 }
 
 dependencies {
+    // 从根项目获取版本号（使用 ext 中定义的版本）
+    def lifecycle_version = rootProject.ext.lifecycle_version
+    def room_version = rootProject.ext.room_version
+    def paging_version = rootProject.ext.paging_version
+    def retrofit_version = rootProject.ext.retrofit_version
+    def nav_version = rootProject.ext.nav_version
+    def okhttp_version = rootProject.ext.okhttp_version
+    def eventbus_version = rootProject.ext.eventbus_version
 
-    implementation libs.androidx.core.ktx
-    implementation libs.androidx.appcompat
-    implementation libs.material
-    implementation libs.androidx.activity
-    implementation libs.androidx.constraintlayout
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
+    // ========== 核心依赖 ==========
+    implementation "androidx.core:core-ktx:$rootProject.ext.core_ktx_version"
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat_version"
+    implementation "com.google.android.material:material:$rootProject.ext.material_version"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // ========== Jetpack 组件 ==========
+    // Lifecycle (ViewModel + LiveData)
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+    // Room 数据库
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"      // Kotlin 扩展
+    kapt "androidx.room:room-compiler:$room_version"           // Kotlin 注解处理
+    // 可选：使用 KSP 替代 KAPT（性能更好）
+    // implementation "androidx.room:room-ktx:$room_version"
+    // ksp "androidx.room:room-compiler:$room_version"
+
+    // Paging 分页
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+
+    // Navigation 导航
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // ========== 网络库 ==========
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    // ========== 其他工具 ==========
+    // EventBus
+    implementation "org.greenrobot:eventbus:$eventbus_version"
+    kapt "org.greenrobot:eventbus-annotation-processor:$eventbus_version" // 可选：注解处理
+
 }
