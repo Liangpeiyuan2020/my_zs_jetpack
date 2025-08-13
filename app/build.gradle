@@ -50,6 +50,8 @@ android {
 }
 
 dependencies {
+//    implementation libs.androidx.activity
+
     // 从根项目获取版本号（使用 ext 中定义的版本）
     def lifecycle_version = rootProject.ext.lifecycle_version
     def room_version = rootProject.ext.room_version
