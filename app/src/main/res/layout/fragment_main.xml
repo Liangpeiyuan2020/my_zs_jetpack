@@ -27,12 +27,12 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/btnNav"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:labelVisibilityMode="labeled"
+            android:layout_height="72dp"
             android:background="?attr/main_bg_1"
             app:itemIconTint="@drawable/selector_bottom_navigation_item"
             app:itemTextColor="@drawable/selector_bottom_navigation_item"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/main_bottom_navigation" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
