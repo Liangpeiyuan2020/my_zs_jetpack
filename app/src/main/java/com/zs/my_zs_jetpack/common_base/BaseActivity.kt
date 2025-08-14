@@ -13,8 +13,8 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
             binding = DataBindingUtil.setContentView(this, it)
         }
         initViewModal()
-        observe()
         init()
+        observe()
     }
 
     abstract fun getLayoutId(): Int
