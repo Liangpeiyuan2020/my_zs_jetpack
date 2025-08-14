@@ -7,4 +7,5 @@ import com.zs.my_zs_jetpack.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun getLayoutId(): Int = R.layout.activity_main
+
 }
