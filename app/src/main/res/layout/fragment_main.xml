@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/main_bg_1"
         android:fitsSystemWindows="true">
 
         <androidx.viewpager2.widget.ViewPager2
@@ -29,6 +30,7 @@
             android:layout_height="58dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:labelVisibilityMode="labeled"
+            android:background="?attr/main_bg_1"
             app:itemIconTint="@drawable/selector_bottom_navigation_item"
             app:itemTextColor="@drawable/selector_bottom_navigation_item"
             app:menu="@menu/main_bottom_navigation" />
