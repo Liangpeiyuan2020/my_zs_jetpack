@@ -12,12 +12,37 @@ import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.common_base.BaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentMainBinding
 import com.zs.my_zs_jetpack.ui.home.HomeFragment
+import com.zs.my_zs_jetpack.ui.mine.MineFragment
+import com.zs.my_zs_jetpack.ui.square.SquareFragment
+import com.zs.my_zs_jetpack.ui.tab.TabFragment
 
 class MainFragment : BaseFragment<FragmentMainBinding>() {
     override fun getLayoutId(): Int = R.layout.fragment_main
 
     private val fragmentList = arrayListOf<Fragment>()
-    private val homeFragment by lazy { HomeFragment() }
+    private val homeFragment by lazy {
+        HomeFragment()
+    }
+    private val projectFragment by lazy {
+        TabFragment().apply {
+            arguments = Bundle().apply {
+                putString("type", "project")
+            }
+        }
+    }
+    private val squareFragment by lazy {
+        SquareFragment()
+    }
+    private val publishNumberFragment by lazy {
+        TabFragment().apply {
+            {
+                arguments = Bundle().apply { putString("type", "publishNumber") }
+            }
+        }
+    }
+    private val mineFragment by lazy {
+        MineFragment()
+    }
     private val mainVM: MainViewModel? by viewModels()
 
 
@@ -25,14 +50,19 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         binding.vm = mainVM
         fragmentList.apply {
             add(homeFragment)
+            add(projectFragment)
+            add(squareFragment)
+            add(publishNumberFragment)
+            add(mineFragment)
         }
         val adapt = MyViewPageAdapt(requireActivity() as FragmentActivity, fragmentList)
         binding.viewPage.adapter = adapt
-        binding.btnNav.setOnItemSelectedListener { item->
-            when(item.itemId){
+        binding.btnNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
                 R.id.menu_home -> {
                     binding.viewPage.setCurrentItem(0, false)
                 }
+
                 R.id.menu_project -> binding.viewPage.setCurrentItem(1, false)
                 R.id.menu_square -> binding.viewPage.setCurrentItem(2, false)
                 R.id.menu_official_account -> binding.viewPage.setCurrentItem(3, false)
