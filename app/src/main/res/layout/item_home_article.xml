@@ -7,7 +7,7 @@
 
         <variable
             name="dataBean"
-            type="com.zs.my_zs_jetpack.model.Article" />
+            type="com.zs.my_zs_jetpack.api.Article" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,4 +1,4 @@
-package com.zs.my_zs_jetpack.model
+package com.zs.my_zs_jetpack.api
 
 data class Article(
     var id: Int,
