@@ -79,19 +79,24 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/svg_add" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-<!--        <TextView-->
-<!--            android:id="@+id/etSearch1"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginLeft="42dp"-->
-<!--            android:layout_marginRight="42dp"-->
-<!--            android:background="@null"-->
-<!--            android:drawablePadding="5dp"-->
-<!--            android:gravity="center_vertical"-->
-<!--            android:text="根据关键字搜索"-->
-<!--            android:textColor="?attr/theme_color_3"-->
-<!--            android:textSize="@dimen/text_2"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.scwang.smart.refresh.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:background="#fff" />
+            <com.scwang.smart.refresh.footer.ClassicsFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
     </FrameLayout>
 
 </layout>

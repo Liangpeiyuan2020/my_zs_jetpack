@@ -23,7 +23,7 @@ android {
             annotationProcessorOptions {
                 arguments += [
                         "room.schemaLocation": "$projectDir/schemas".toString(),
-                        "room.incremental": "true"
+                        "room.incremental"   : "true"
                 ]
             }
         }
@@ -60,6 +60,8 @@ dependencies {
     def nav_version = rootProject.ext.nav_version
     def okhttp_version = rootProject.ext.okhttp_version
     def eventbus_version = rootProject.ext.eventbus_version
+    def banner_version = rootProject.ext.banner
+    def smart_version = rootProject.ext.smart
 
     // ========== 核心依赖 ==========
     implementation "androidx.core:core-ktx:$rootProject.ext.core_ktx_version"
@@ -102,5 +104,8 @@ dependencies {
     // EventBus
     implementation "org.greenrobot:eventbus:$eventbus_version"
     kapt "org.greenrobot:eventbus-annotation-processor:$eventbus_version" // 可选：注解处理
+
+    implementation  "io.github.scwang90:refresh-layout-kernel:$smart_version"      //核心必须依赖
+    implementation  "io.github.scwang90:refresh-header-classics:$smart_version"   //经典刷新头
 
 }
