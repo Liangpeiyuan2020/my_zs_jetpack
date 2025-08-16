@@ -83,7 +83,9 @@
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="54dp"
+            >
             <com.scwang.smart.refresh.header.ClassicsHeader
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
