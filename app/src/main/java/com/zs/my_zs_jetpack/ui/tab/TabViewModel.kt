@@ -9,11 +9,12 @@ import com.zs.my_zs_jetpack.api.AllDataBean
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.ArticleTab
 import com.zs.my_zs_jetpack.api.RetrofitManage
+import com.zs.my_zs_jetpack.common_base.BaseModel
 import kotlinx.coroutines.launch
 
-class TabViewModel : ViewModel() {
-    private var _articleTab = MutableLiveData<List<ArticleTab>>()
-    val articleTab: LiveData<List<ArticleTab>> = _articleTab
+class TabViewModel : BaseModel() {
+    private var _articleTab = MutableLiveData<List<ArticleTab>?>()
+    val articleTab: LiveData<List<ArticleTab>?> = _articleTab
 
     private var _projectArticleList = MutableLiveData<List<AllDataBean>>()
     val projectArticleList: LiveData<List<AllDataBean>> = _projectArticleList
@@ -23,7 +24,7 @@ class TabViewModel : ViewModel() {
 
     fun getTab() {
         viewModelScope.launch {
-            _articleTab.value = rep.getArticleTab()
+            _articleTab.value = callApi { rep.getArticleTab() }
         }
     }
 }

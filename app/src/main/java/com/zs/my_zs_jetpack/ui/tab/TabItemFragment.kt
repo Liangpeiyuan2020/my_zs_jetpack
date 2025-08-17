@@ -68,5 +68,6 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
                 }
             }
         }
+        observeLoadingState(tabArticleAdapt)
     }
 }
