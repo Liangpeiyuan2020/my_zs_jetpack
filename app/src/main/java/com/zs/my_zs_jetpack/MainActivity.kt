@@ -52,23 +52,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private fun showGlobalLoading() {
         Log.i("showGlobalLoading", "showGlobalLoading")
-        binding.globalOverlay.visibility = View.VISIBLE
-        binding.globalProgress.visibility = View.VISIBLE
-
-        // 禁用用户交互
-        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
-        // 启用加载动画
-        binding.globalProgress.isIndeterminate = true
+        binding.loadingTip.loading()
+//        binding.globalOverlay.visibility = View.VISIBLE
+//        binding.globalProgress.visibility = View.VISIBLE
+//
+//        // 禁用用户交互
+//        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+//
+//        // 启用加载动画
+//        binding.globalProgress.isIndeterminate = true
     }
 
     private fun hideGlobalLoading() {
         Log.i("showGlobalLoading", "hideGlobalLoading")
-        binding.globalOverlay.visibility = View.GONE
-        binding.globalProgress.visibility = View.GONE
-
-        // 恢复用户交互
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        binding.loadingTip.dismiss()
+//        binding.globalOverlay.visibility = View.GONE
+//        binding.globalProgress.visibility = View.GONE
+//
+//        // 恢复用户交互
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     private fun showPagingLoadingMore() {
