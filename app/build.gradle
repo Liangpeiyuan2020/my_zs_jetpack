@@ -62,6 +62,7 @@ dependencies {
     def eventbus_version = rootProject.ext.eventbus_version
     def banner_version = rootProject.ext.banner
     def smart_version = rootProject.ext.smart
+//    def magic_version = rootProject.ext.magic
 
     // ========== 核心依赖 ==========
     implementation "androidx.core:core-ktx:$rootProject.ext.core_ktx_version"
@@ -108,4 +109,11 @@ dependencies {
     implementation  "io.github.scwang90:refresh-layout-kernel:$smart_version"      //核心必须依赖
     implementation  "io.github.scwang90:refresh-header-classics:$smart_version"   //经典刷新头
 
+    implementation 'com.github.bumptech.glide:glide:4.16.0' // 替换为最新版
+
+
+    // MagicIndicator
+//    implementation "com.github.hackware1993:MagicIndicator:$magic_version"
+//    implementation 'com.github.hackware1993:MagicIndicator:1.6.0' // for support lib
+//    implementation 'com.github.hackware1993:MagicIndicator:1.7.0' // for androidx
 }

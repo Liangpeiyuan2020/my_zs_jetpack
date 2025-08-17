@@ -5,6 +5,7 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url "https://jitpack.io" }
 //        google()
         mavenCentral()
     }
@@ -47,6 +48,8 @@ ext {
     eventbus_version = '3.3.1'
     banner = '2.2.7'
     smart = '3.0.0-alpha'
+
+//    magic = '1.6.0'
 }
 
 task clean(type: Delete) {

@@ -1,7 +1,29 @@
 package com.zs.my_zs_jetpack.ui.tab
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.zs.my_zs_jetpack.Repository.ArticleRepository
+import com.zs.my_zs_jetpack.api.AllDataBean
+import com.zs.my_zs_jetpack.api.ApiServices
+import com.zs.my_zs_jetpack.api.ArticleTab
+import com.zs.my_zs_jetpack.api.RetrofitManage
+import kotlinx.coroutines.launch
 
 class TabViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+    private var _articleTab = MutableLiveData<List<ArticleTab>>()
+    val articleTab: LiveData<List<ArticleTab>> = _articleTab
+
+    private var _projectArticleList = MutableLiveData<List<AllDataBean>>()
+    val projectArticleList: LiveData<List<AllDataBean>> = _projectArticleList
+
+    val retrofit = RetrofitManage.getService(ApiServices::class.java)
+    val rep = ArticleRepository(retrofit)
+
+    fun getTab() {
+        viewModelScope.launch {
+            _articleTab.value = rep.getArticleTab()
+        }
+    }
 }

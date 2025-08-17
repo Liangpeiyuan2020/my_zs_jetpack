@@ -1,0 +1,66 @@
+package com.zs.my_zs_jetpack.ui.tab
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
+import com.zs.my_zs_jetpack.R
+import com.zs.my_zs_jetpack.commonAdapt.TabArticleAdapt
+import com.zs.my_zs_jetpack.common_base.BaseFragment
+import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
+import com.zs.my_zs_jetpack.databinding.FragmentTabItemBinding
+import kotlinx.coroutines.launch
+
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
+
+/**
+ * A simple [Fragment] subclass.
+ * Use the [TabItemFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
+    override fun getLayoutId(): Int = R.layout.fragment_tab_item
+    private val tabItemVm by viewModels<TabItemViewModel>()
+    private lateinit var tabArticleAdapt: TabArticleAdapt
+    private var type: Int? = null
+    private var tabId: Int? = null
+
+    override fun lazyInit() {
+        type = arguments?.getInt("type") ?: 0
+        tabId = arguments?.getInt("tabId") ?: 0
+        initView()
+    }
+
+    private fun initView() {
+        //关闭更新动画
+        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.refreshLayout.setOnRefreshListener {
+            tabItemVm?.loadData(tabId!!)
+            it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+        }
+        //上拉加载
+        binding.refreshLayout.setOnLoadMoreListener {
+            it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
+        }
+        tabArticleAdapt = TabArticleAdapt()
+        binding.recyclerView.adapter = tabArticleAdapt
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabItemVm.tabItemArticles.collect {
+                    tabArticleAdapt.submitData(it)
+                }
+            }
+        }
+    }
+}
