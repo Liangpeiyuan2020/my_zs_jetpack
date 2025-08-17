@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.map
+import com.google.android.material.tabs.TabLayoutMediator
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.api.ArticleTab
 import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
@@ -40,14 +41,21 @@ class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
                     //想各个fragment传递信息
                     val bundle = Bundle()
                     bundle.putInt("type", 0)
-//                    bundle.putInt("tabId", it.id)
-//                    bundle.putString("name", it.name)
+                    bundle.putInt("tabId", it.id)
+                    bundle.putString("name", it.name)
                     arguments = bundle
                 })
             }
         }
         viewPagerAdapter = MyViewPageAdapt(requireActivity(), fragmentList)
+
+        binding.vpArticleFragment.adapter = viewPagerAdapter
+        TabLayoutMediator(binding.tabLayout, binding.vpArticleFragment) { tab, position ->
+            tab.text = tabList[position].name
+        }.attach()
+        binding.vpArticleFragment.offscreenPageLimit = 5
     }
+
 
     override fun getLayoutId(): Int = R.layout.fragment_tab
 

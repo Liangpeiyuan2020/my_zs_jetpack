@@ -1,6 +1,7 @@
 package com.zs.my_zs_jetpack.ui.tab
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,20 +37,25 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     private var tabId: Int? = null
 
     override fun lazyInit() {
+
         type = arguments?.getInt("type") ?: 0
         tabId = arguments?.getInt("tabId") ?: 0
+        tabItemVm?.loadData(tabId!!)
         initView()
+        Log.i("TabFragment", tabId.toString())
     }
 
     private fun initView() {
         //关闭更新动画
         (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.refreshLayout.setOnRefreshListener {
+            Log.i("TabFragment1", tabId.toString())
             tabItemVm?.loadData(tabId!!)
             it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
         }
         //上拉加载
         binding.refreshLayout.setOnLoadMoreListener {
+            Log.i("TabFragment2", tabId.toString())
             it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
         }
         tabArticleAdapt = TabArticleAdapt()

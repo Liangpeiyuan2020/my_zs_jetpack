@@ -12,25 +12,29 @@ import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.RetrofitManage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.shareIn
 
 class TabItemViewModel : ViewModel() {
     private val retrofit = RetrofitManage.getService(ApiServices::class.java)
 
     private val repository = ArticleRepository(retrofit)
 
-    private var tableId = 402
-    private val _tableId = MutableStateFlow<Int>(tableId)
+
+    private val _tableId = MutableStateFlow<Int?>(null)
 
     val tabItemArticles: Flow<PagingData<AllDataBean>> = _tableId
         .flatMapLatest { query ->
-            repository.getProjectList(query).cachedIn(viewModelScope)
-        }
+            repository.getProjectList(query!!).cachedIn(viewModelScope)
+        }.shareIn(viewModelScope, SharingStarted.Lazily) // 状态流共享
 
 
     fun loadData(query: Int) {
-        tableId = query
-        _tableId.value = tableId
+        if (_tableId.value != query) {
+            _tableId.value = query
+        }
     }
 
 }
