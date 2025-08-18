@@ -66,6 +66,7 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
                 }
             }
         }
+        observeLoadingState(articleAdapt)
     }
 
 
