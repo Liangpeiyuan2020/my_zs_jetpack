@@ -25,9 +25,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     }
     private val projectFragment by lazy {
         TabFragment().apply {
-            arguments = Bundle().apply {
-                putString("type", "project")
-            }
+            arguments = Bundle().apply { putInt("type", 0) }
         }
     }
     private val squareFragment by lazy {
@@ -35,9 +33,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     }
     private val publishNumberFragment by lazy {
         TabFragment().apply {
-            {
-                arguments = Bundle().apply { putString("type", "publishNumber") }
-            }
+            arguments = Bundle().apply { putInt("type", 1) }
         }
     }
     private val mineFragment by lazy {

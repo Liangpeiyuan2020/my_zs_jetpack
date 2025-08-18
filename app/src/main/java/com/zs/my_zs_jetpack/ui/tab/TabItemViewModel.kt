@@ -21,19 +21,20 @@ class TabItemViewModel : ViewModel() {
     private val retrofit = RetrofitManage.getService(ApiServices::class.java)
 
     private val repository = ArticleRepository(retrofit)
-
+    private var _type: Int = 0
 
     private val _tableId = MutableStateFlow<Int?>(null)
 
     val tabItemArticles: Flow<PagingData<AllDataBean>> = _tableId
         .flatMapLatest { query ->
-            repository.getProjectList(query!!).cachedIn(viewModelScope)
+            repository.getTabArticleList(query!!, _type).cachedIn(viewModelScope)
         }.shareIn(viewModelScope, SharingStarted.Lazily) // 状态流共享
 
 
-    fun loadData(query: Int) {
+    fun loadData(query: Int, type: Int) {
         if (_tableId.value != query) {
             _tableId.value = query
+            _type = type
         }
     }
 

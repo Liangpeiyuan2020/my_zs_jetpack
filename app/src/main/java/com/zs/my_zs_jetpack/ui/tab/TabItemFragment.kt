@@ -32,15 +32,17 @@ private const val ARG_PARAM2 = "param2"
 class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     override fun getLayoutId(): Int = R.layout.fragment_tab_item
     private val tabItemVm by viewModels<TabItemViewModel>()
+
     private lateinit var tabArticleAdapt: TabArticleAdapt
-    private var type: Int? = null
-    private var tabId: Int? = null
+
+    private var type: Int = 0
+    private var tabId: Int = 0
 
     override fun lazyInit() {
 
         type = arguments?.getInt("type") ?: 0
         tabId = arguments?.getInt("tabId") ?: 0
-        tabItemVm?.loadData(tabId!!)
+        tabItemVm?.loadData(tabId, type)
         initView()
         Log.i("TabFragment01", tabId.toString())
     }
@@ -50,7 +52,7 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
         (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.refreshLayout.setOnRefreshListener {
             Log.i("TabFragment1", tabId.toString())
-            tabItemVm?.loadData(tabId!!)
+            tabItemVm?.loadData(tabId, type)
             it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
         }
         //上拉加载

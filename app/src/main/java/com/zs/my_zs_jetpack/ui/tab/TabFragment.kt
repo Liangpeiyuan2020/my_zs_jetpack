@@ -19,12 +19,15 @@ class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
 
     private val tabVm: TabViewModel by viewModels<TabViewModel>()
     private lateinit var viewPagerAdapter: MyViewPageAdapt
+    private var type: Int = 0
     override fun lazyInit() {
-        loadData()
+        type = arguments?.getInt("type") ?: 0
+        loadData(type)
+        Log.i("TabFragment5", type.toString())
     }
 
-    private fun loadData() {
-        tabVm.getTab()
+    private fun loadData(type: Int) {
+        tabVm.getTab(type)
     }
 
     override fun observe() {
@@ -40,7 +43,7 @@ class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
                 add(TabItemFragment().apply {
                     //想各个fragment传递信息
                     val bundle = Bundle()
-                    bundle.putInt("type", 0)
+                    bundle.putInt("type", type)
                     bundle.putInt("tabId", it.id)
                     bundle.putString("name", it.name)
                     arguments = bundle

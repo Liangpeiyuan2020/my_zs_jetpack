@@ -7,7 +7,7 @@ import com.zs.my_zs_jetpack.api.ApiResponse
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.ArticlePage
 
-class TabArticlePagingSource(val service: ApiServices, val tableId: Int) :
+class TabArticlePagingSource(val service: ApiServices, val tableId: Int, val type: Int) :
     PagingSource<Int, AllDataBean>() {
     override fun getRefreshKey(state: PagingState<Int, AllDataBean>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -19,7 +19,9 @@ class TabArticlePagingSource(val service: ApiServices, val tableId: Int) :
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AllDataBean> {
         return try {
             val page = params.key ?: 1
-            val response: ApiResponse<ArticlePage<AllDataBean>> = service.getProjectList(page, tableId)
+            val response: ApiResponse<ArticlePage<AllDataBean>> =
+                if (type == 0) service.getProjectList(page, tableId)
+                else service.getAccountList(tableId, page)
 
             LoadResult.Page(
                 data = response.data.datas,

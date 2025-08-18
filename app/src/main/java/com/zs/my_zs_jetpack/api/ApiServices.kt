@@ -17,4 +17,17 @@ interface ApiServices {
     @GET("/project/list/{pageNum}/json")
     suspend fun getProjectList(@Path("pageNum") pageNum: Int, @Query("cid") cid: Int)
             : ApiResponse<ArticlePage<AllDataBean>>
+
+    /**
+     * 获取项目tab
+     */
+    @GET("/wxarticle/chapters/json")
+    suspend fun getAccountTabList(): ApiResponse<MutableList<ArticleTab>>
+
+    /**
+     * 获取公众号列表
+     */
+    @GET("/wxarticle/list/{id}/{pageNum}/json")
+    suspend fun getAccountList(@Path("id") cid: Int, @Path("pageNum") pageNum: Int)
+            : ApiResponse<ArticlePage<AllDataBean>>
 }

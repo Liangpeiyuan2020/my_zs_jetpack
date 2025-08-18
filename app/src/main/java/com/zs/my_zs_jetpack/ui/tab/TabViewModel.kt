@@ -16,15 +16,16 @@ class TabViewModel : BaseModel() {
     private var _articleTab = MutableLiveData<List<ArticleTab>?>()
     val articleTab: LiveData<List<ArticleTab>?> = _articleTab
 
-    private var _projectArticleList = MutableLiveData<List<AllDataBean>>()
-    val projectArticleList: LiveData<List<AllDataBean>> = _projectArticleList
 
     val retrofit = RetrofitManage.getService(ApiServices::class.java)
     val rep = ArticleRepository(retrofit)
 
-    fun getTab() {
+    fun getTab(type: Int) {
         viewModelScope.launch {
-            _articleTab.value = callApi { rep.getArticleTab() }
+            when (type) {
+                0 -> _articleTab.value = callApi { rep.getArticleTab() }
+                1 -> _articleTab.value = callApi { rep.getAccountTab() }
+            }
         }
     }
 }

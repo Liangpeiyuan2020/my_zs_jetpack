@@ -26,10 +26,15 @@ class ArticleRepository(val services: ApiServices) {
         return dataList.data
     }
 
-    fun getProjectList(tableId: Int): Flow<PagingData<AllDataBean>> {
+    fun getTabArticleList(tableId: Int, type: Int): Flow<PagingData<AllDataBean>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),
-            pagingSourceFactory = { TabArticlePagingSource(services, tableId) }
+            pagingSourceFactory = { TabArticlePagingSource(services, tableId, type) }
         ).flow
+    }
+
+    suspend fun getAccountTab(): List<ArticleTab> {
+        val dataList = services.getAccountTabList()
+        return dataList.data
     }
 }
