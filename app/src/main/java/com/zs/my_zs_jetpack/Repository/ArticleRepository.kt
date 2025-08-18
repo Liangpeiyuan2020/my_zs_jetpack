@@ -10,6 +10,7 @@ import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.ArticleTab
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
+import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabArticlePagingSource
 import kotlinx.coroutines.flow.Flow
 
@@ -26,10 +27,17 @@ class ArticleRepository(val services: ApiServices) {
         return dataList.data
     }
 
-    fun getTabArticleList(tableId: Int, type: Int): Flow<PagingData<AllDataBean>> {
+    fun getProjectArticleList(tableId: Int): Flow<PagingData<AllDataBean>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),
-            pagingSourceFactory = { TabArticlePagingSource(services, tableId, type) }
+            pagingSourceFactory = { TabArticlePagingSource(services, tableId) }
+        ).flow
+    }
+
+    fun getAccountArticleList(tableId: Int): Flow<PagingData<Article>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, prefetchDistance = 5),
+            pagingSourceFactory = { TabAccountArticlePagingSource(services, tableId) }
         ).flow
     }
 

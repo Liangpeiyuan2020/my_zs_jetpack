@@ -1,25 +1,27 @@
 package com.zs.my_zs_jetpack.paging
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingSource.LoadParams
+import androidx.paging.PagingSource.LoadResult
 import androidx.paging.PagingState
-import com.zs.my_zs_jetpack.api.AllDataBean
 import com.zs.my_zs_jetpack.api.ApiResponse
 import com.zs.my_zs_jetpack.api.ApiServices
+import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.ArticlePage
 
-class TabArticlePagingSource(val service: ApiServices, val tableId: Int) :
-    PagingSource<Int, AllDataBean>() {
-    override fun getRefreshKey(state: PagingState<Int, AllDataBean>): Int? {
+class TabAccountArticlePagingSource(val service: ApiServices, val tableId: Int) :
+    PagingSource<Int, Article>() {
+    override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AllDataBean> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
         return try {
             val page = params.key ?: 1
-            val response: ApiResponse<ArticlePage<AllDataBean>> = service.getProjectList(page, tableId)
+            val response: ApiResponse<ArticlePage<Article>> = service.getAccountList(tableId, page)
 
             LoadResult.Page(
                 data = response.data.datas,

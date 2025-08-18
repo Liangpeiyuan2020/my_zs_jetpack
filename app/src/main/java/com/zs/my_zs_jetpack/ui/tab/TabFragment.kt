@@ -13,7 +13,7 @@ import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.api.ArticleTab
 import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentTabBinding
-import com.zs.my_zs_jetpack.ui.main.MyViewPageAdapt
+import com.zs.my_zs_jetpack.commonAdapt.MyViewPageAdapt
 
 class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
 

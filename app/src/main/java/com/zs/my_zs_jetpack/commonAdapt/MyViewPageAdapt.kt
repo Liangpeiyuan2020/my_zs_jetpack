@@ -1,4 +1,4 @@
-package com.zs.my_zs_jetpack.ui.main
+package com.zs.my_zs_jetpack.commonAdapt
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

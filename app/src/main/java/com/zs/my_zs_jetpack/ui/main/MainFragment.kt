@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.zs.my_zs_jetpack.R
+import com.zs.my_zs_jetpack.commonAdapt.MyViewPageAdapt
 import com.zs.my_zs_jetpack.common_base.BaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentMainBinding
 import com.zs.my_zs_jetpack.ui.home.HomeFragment

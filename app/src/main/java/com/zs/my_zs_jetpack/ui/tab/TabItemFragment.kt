@@ -13,10 +13,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zs.my_zs_jetpack.R
+import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
 import com.zs.my_zs_jetpack.commonAdapt.TabArticleAdapt
 import com.zs.my_zs_jetpack.common_base.BaseFragment
 import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentTabItemBinding
+import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -33,7 +35,8 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     override fun getLayoutId(): Int = R.layout.fragment_tab_item
     private val tabItemVm by viewModels<TabItemViewModel>()
 
-    private lateinit var tabArticleAdapt: TabArticleAdapt
+    private lateinit var projectTabArticleAdapt: TabArticleAdapt
+    private lateinit var accountTabArticleAdapt: ArticleAdapter
 
     private var type: Int = 0
     private var tabId: Int = 0
@@ -60,16 +63,30 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
             Log.i("TabFragment2", tabId.toString())
             it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
         }
-        tabArticleAdapt = TabArticleAdapt()
-        binding.recyclerView.adapter = tabArticleAdapt
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                tabItemVm.tabItemArticles.collect {
-                    tabArticleAdapt.submitData(it)
+        if (type == 0) {
+            projectTabArticleAdapt = TabArticleAdapt()
+            binding.recyclerView.adapter = projectTabArticleAdapt
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    tabItemVm.projectTabItemArticles.collect {
+                        projectTabArticleAdapt.submitData(it)
+                    }
                 }
             }
+            observeLoadingState(projectTabArticleAdapt)
+        } else {
+            accountTabArticleAdapt = ArticleAdapter()
+            binding.recyclerView.adapter = accountTabArticleAdapt
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    tabItemVm.accountTabItemArticles.collect {
+                        accountTabArticleAdapt.submitData(it)
+                    }
+                }
+            }
+            observeLoadingState(accountTabArticleAdapt)
         }
-        observeLoadingState(tabArticleAdapt)
     }
 }
