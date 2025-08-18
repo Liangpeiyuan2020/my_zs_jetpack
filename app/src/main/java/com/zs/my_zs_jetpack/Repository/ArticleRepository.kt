@@ -9,6 +9,8 @@ import com.zs.my_zs_jetpack.api.ApiResponse
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.ArticleTab
+import com.zs.my_zs_jetpack.api.NavigationBean
+import com.zs.my_zs_jetpack.api.SystemBean
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabArticlePagingSource
@@ -43,6 +45,16 @@ class ArticleRepository(val services: ApiServices) {
 
     suspend fun getAccountTab(): List<ArticleTab> {
         val dataList = services.getAccountTabList()
+        return dataList.data
+    }
+
+    suspend fun getSystemList(): List<SystemBean> {
+        val dataList = services.getSystemList()
+        return dataList.data
+    }
+
+    suspend fun getNavigationList(): List<NavigationBean> {
+        val dataList = services.getNavigation()
         return dataList.data
     }
 }

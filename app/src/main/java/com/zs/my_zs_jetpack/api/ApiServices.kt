@@ -30,4 +30,16 @@ interface ApiServices {
     @GET("/wxarticle/list/{id}/{pageNum}/json")
     suspend fun getAccountList(@Path("id") cid: Int, @Path("pageNum") pageNum: Int)
             : ApiResponse<ArticlePage<Article>>
+
+    /**
+     * 体系
+     */
+    @GET("/tree/json")
+    suspend fun getSystemList(): ApiResponse<MutableList<SystemBean>>
+
+    /**
+     * 导航
+     */
+    @GET("/navi/json")
+    fun getNavigation(): ApiResponse<MutableList<NavigationBean>>
 }
