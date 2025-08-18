@@ -42,7 +42,7 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
         tabId = arguments?.getInt("tabId") ?: 0
         tabItemVm?.loadData(tabId!!)
         initView()
-        Log.i("TabFragment", tabId.toString())
+        Log.i("TabFragment01", tabId.toString())
     }
 
     private fun initView() {

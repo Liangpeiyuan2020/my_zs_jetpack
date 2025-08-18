@@ -29,7 +29,7 @@ class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
 
     override fun observe() {
         tabVm.articleTab.observe(viewLifecycleOwner) { it ->
-            Log.i("TabFragment", it!!.size.toString())
+            Log.i("TabFragment0", it!!.size.toString())
             initView(it)
         }
     }
