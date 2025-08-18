@@ -41,5 +41,5 @@ interface ApiServices {
      * 导航
      */
     @GET("/navi/json")
-    fun getNavigation(): ApiResponse<MutableList<NavigationBean>>
+    suspend fun getNavigation(): ApiResponse<MutableList<NavigationBean>>
 }

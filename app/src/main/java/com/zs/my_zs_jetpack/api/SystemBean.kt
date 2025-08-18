@@ -12,9 +12,9 @@ data class SystemBean(
 )
 
 data class ChildrenBean(
-    val articleList: List<String>,
+    val articleList: List<Any>,
     val author: String,
-    val children: List<String>,
+    val children: List<Any>,
     val courseId: Int,
     val cover: String,
     val desc: String,

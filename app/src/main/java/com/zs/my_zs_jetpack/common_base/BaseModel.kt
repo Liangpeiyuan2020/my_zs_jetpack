@@ -1,5 +1,6 @@
 package com.zs.my_zs_jetpack.common_base
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.zs.my_zs_jetpack.AppGlobals
 
@@ -15,6 +16,7 @@ abstract class BaseModel : ViewModel() {
         } catch (e: Exception) {
             AppGlobals.hideGlobalLoading()
             handleApiError(e)
+            Log.e("apiRequestError", e.message.toString())
             return null
         }
     }

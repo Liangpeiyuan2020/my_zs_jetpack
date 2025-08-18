@@ -1,5 +1,6 @@
 package com.zs.my_zs_jetpack.ui.square
 
+import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.map
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,36 +14,21 @@ import com.zs.my_zs_jetpack.databinding.FragmentSystemBinding
 class SystemFragment : LazyBaseFragment<FragmentSystemBinding>() {
     private val systemVm by viewModels<SquareViewModel>()
     private lateinit var systemAdapter: SystemAdapter
-    private lateinit var itemList: MutableList<SquareBaseBean>
+    private var itemList: MutableList<SquareBaseBean> = mutableListOf()
     private var type: Int = 0
 
     override fun observe() {
         super.observe()
-        systemVm.systemList.observe(viewLifecycleOwner) {
-            it?.forEach {
-                itemList.add(
-                    SquareBaseBean(
-                        it.name,
-                        it.children.map { it.name }
-                    )
-                )
-            }
-        }
-        systemVm.navigationList.observe(viewLifecycleOwner) {
-            it?.forEach {
-                itemList.add(
-                    SquareBaseBean(
-                        it.name,
-                        it.articles.map { it.title }
-                    )
-                )
-            }
+        systemVm.itemList.observe(viewLifecycleOwner) {
+            Log.i("SystemFragment", it?.size.toString())
+            systemAdapter = SystemAdapter(it!!)
+            binding.recyclerView.adapter = systemAdapter
         }
     }
 
     override fun lazyInit() {
         type = arguments?.getInt("index") ?: 0
-
+        Log.i("SystemFragment", type.toString())
         loadData()
         initView()
     }
