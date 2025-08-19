@@ -1,5 +1,6 @@
 package com.zs.my_zs_jetpack.Repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -12,6 +13,7 @@ import com.zs.my_zs_jetpack.api.ArticleTab
 import com.zs.my_zs_jetpack.api.IntegralBean
 import com.zs.my_zs_jetpack.api.NavigationBean
 import com.zs.my_zs_jetpack.api.SystemBean
+import com.zs.my_zs_jetpack.api.UserBean
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabArticlePagingSource
@@ -62,5 +64,15 @@ class ArticleRepository(val services: ApiServices) {
     suspend fun getInternal(): IntegralBean {
         val dataList = services.getIntegral()
         return dataList.data
+    }
+
+    suspend fun login(userName: String, userPassword: String): UserBean {
+        val dataList = services.login(userName, userPassword)
+        Log.i("LoginFragment", dataList.toString())
+        return dataList.data
+    }
+
+    suspend fun register(userName: String, userPassword: String) {
+        val dataList = services.register(userName, userPassword, userPassword)
     }
 }

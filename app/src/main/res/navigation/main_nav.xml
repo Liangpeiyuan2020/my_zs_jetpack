@@ -14,7 +14,14 @@
         tools:layout="@layout/fragment_main">
 
 
+        <action
+            android:id="@+id/action_mainFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.zs.my_zs_jetpack.ui.login.LoginFragment"
+        android:label="LoginFragment" />
 
 
 </navigation>

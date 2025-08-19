@@ -1,5 +1,8 @@
 package com.zs.my_zs_jetpack.commonAdapt
 
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -32,5 +35,27 @@ object ArticleCollectIconAdapter {
             .transition(withCrossFade())
             .transform(GlideRoundTransform(view.context.applicationContext, 20))
             .into(view)
+    }
+
+    /**
+     * 是否显示密码，图片
+     */
+    @BindingAdapter(value = ["passSrc"])
+    @JvmStatic
+    fun passSrc(view: ImageView, isVisibility: Boolean) {
+        view.isSelected = isVisibility
+    }
+
+    /**
+     * 是否显示密码，edit
+     */
+    @BindingAdapter(value = ["passType"])
+    @JvmStatic
+    fun passType(view: EditText, isVisibility: Boolean) {
+        view.transformationMethod = if (isVisibility) {
+            PasswordTransformationMethod.getInstance()
+        } else {
+            HideReturnsTransformationMethod.getInstance()
+        }
     }
 }

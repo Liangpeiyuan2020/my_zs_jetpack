@@ -1,6 +1,9 @@
 package com.zs.my_zs_jetpack.api
 
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -47,5 +50,26 @@ interface ApiServices {
      * 获取个人积分
      */
     @GET("/lg/coin/userinfo/json")
-    suspend fun getIntegral():ApiResponse<IntegralBean>
+    suspend fun getIntegral(): ApiResponse<IntegralBean>
+
+
+    /**
+     * 登录
+     */
+    @FormUrlEncoded
+    @POST("/user/login")
+    suspend fun login(
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): ApiResponse<UserBean>
+
+    /**
+     * 注册
+     */
+    @POST("/user/register")
+    suspend fun register(
+        @Query("username") username: String,
+        @Query("password") password: String,
+        @Query("repassword") repassword: String
+    ): ApiResponse<Any>
 }
