@@ -42,4 +42,10 @@ interface ApiServices {
      */
     @GET("/navi/json")
     suspend fun getNavigation(): ApiResponse<MutableList<NavigationBean>>
+
+    /**
+     * 获取个人积分
+     */
+    @GET("/lg/coin/userinfo/json")
+    suspend fun getIntegral():ApiResponse<IntegralBean>
 }

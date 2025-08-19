@@ -11,10 +11,12 @@ import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentMineBinding
 
 class MineFragment : LazyBaseFragment<FragmentMineBinding>() {
+    private val mineVm by viewModels<MineViewModel>()
     override fun lazyInit() {
+        binding.vm = mineVm
+        mineVm.getInternalBean()
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_mine
-
 
 }

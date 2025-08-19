@@ -2,6 +2,7 @@ package com.zs.my_zs_jetpack.commonAdapt
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.api.SquareBaseBean
@@ -33,8 +34,14 @@ class SystemAdapter(val itemList: List<SquareBaseBean>) :
         fun bind(systemBean: SquareBaseBean) {
             binding.tvTitle.text = systemBean.name
             binding.labelsView.setLabels(systemBean.children)
-            binding.labelsView.setBackgroundResource(R.drawable.ripple_tag_bg)
+//            binding.labelsView.setBackgroundResource(R.drawable.ripple_tag_bg)
+            binding.labelsView.apply {
+                for (child in children){
+                    child.setBackgroundResource(R.drawable.ripple_tag_bg)
+                }
+            }
         }
+
     }
 //    override fun convert(helper: BaseViewHolder, item: SystemBean) {
 //        item.let {

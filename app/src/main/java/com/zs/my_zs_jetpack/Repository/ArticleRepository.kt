@@ -9,6 +9,7 @@ import com.zs.my_zs_jetpack.api.ApiResponse
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.ArticleTab
+import com.zs.my_zs_jetpack.api.IntegralBean
 import com.zs.my_zs_jetpack.api.NavigationBean
 import com.zs.my_zs_jetpack.api.SystemBean
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
@@ -55,6 +56,11 @@ class ArticleRepository(val services: ApiServices) {
 
     suspend fun getNavigationList(): List<NavigationBean> {
         val dataList = services.getNavigation()
+        return dataList.data
+    }
+
+    suspend fun getInternal(): IntegralBean {
+        val dataList = services.getIntegral()
         return dataList.data
     }
 }
