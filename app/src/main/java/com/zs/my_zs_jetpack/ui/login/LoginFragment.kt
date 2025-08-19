@@ -30,6 +30,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         loginVm.password.observe(viewLifecycleOwner) {
             Log.i("LoginFragment1", it)
         }
+        loginVm.loginRes.observe(viewLifecycleOwner) {
+            if (!it) MyToast.toast(loginVm.loginMes.value ?: "登录失败")
+        }
 
     }
 

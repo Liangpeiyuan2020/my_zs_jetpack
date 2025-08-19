@@ -18,13 +18,20 @@ class LoginViewModel : BaseModel() {
     var username = MutableLiveData<String>()
     var password = MutableLiveData<String>()
     var passIsVisibility = MutableLiveData<Boolean>()
-    var loginRes = MutableLiveData<UserBean?>()
+    var loginRes = MutableLiveData<Boolean>(false)
+    var loginMes = MutableLiveData<String>()
 
     fun login() {
         if (TextUtils.isEmpty(username.value) || TextUtils.isEmpty(password.value)) return
         viewModelScope.launch {
-            loginRes.value = callApi { repo.login(username.value!!, password.value!!) }
-            Log.i("LoginFragment", loginRes.value.toString())
+            val data = callApi { repo.login(username.value!!, password.value!!) }
+            if (data?.errorCode == 0) {
+                loginRes.value = true
+            } else {
+                loginMes.value = data?.errorMsg
+                loginRes.value = false
+            }
+
         }
     }
 }

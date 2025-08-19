@@ -66,10 +66,10 @@ class ArticleRepository(val services: ApiServices) {
         return dataList.data
     }
 
-    suspend fun login(userName: String, userPassword: String): UserBean {
+    suspend fun login(userName: String, userPassword: String): ApiResponse<UserBean> {
         val dataList = services.login(userName, userPassword)
         Log.i("LoginFragment", dataList.toString())
-        return dataList.data
+        return dataList
     }
 
     suspend fun register(userName: String, userPassword: String) {
