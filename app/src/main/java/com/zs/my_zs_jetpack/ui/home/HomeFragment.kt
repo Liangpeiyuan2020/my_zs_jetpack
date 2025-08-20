@@ -43,7 +43,7 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
 
         articleAdapt = ArticleAdapter(
             onCollectClick = { article: Article ->
-                Log.i("onCollectClick", "0")
+                Log.i("onCollectClick", "${article.toString()}")
                 val shouldCollect = !article.collect
                 homeVM.handleCollection(article.id, shouldCollect)
             }
@@ -59,10 +59,9 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
         // 启动状态监听
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeVM.collectionStates.collectLatest { statesMap ->
-                    statesMap.values.forEach { state ->
-                        articleAdapt.updateCollectionState(state)
-                    }
+                homeVM.collectionUpdates.collect { state ->
+                    articleAdapt.updateCollectionState(state)
+
                 }
             }
         }

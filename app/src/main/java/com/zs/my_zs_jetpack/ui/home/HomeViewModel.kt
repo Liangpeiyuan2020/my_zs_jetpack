@@ -1,5 +1,6 @@
 package com.zs.my_zs_jetpack.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,18 +15,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import com.zs.my_zs_jetpack.api.CollectionState
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
+    // 记录所有点击过的文章的状态缓存
+    private val stateCache = mutableMapOf<Int, CollectionState>()
 
-    // 私有状态流，保存所有文章的状态
-    private val _collectionStates = MutableStateFlow<Map<Int, CollectionState>>(emptyMap())
-
-    // 公开只读状态流
-    val collectionStates: StateFlow<Map<Int, CollectionState>> = _collectionStates.asStateFlow()
+    //    // 私有状态流，保存所有文章的状态
+//    private val _collectionStates = MutableStateFlow<Map<Int, CollectionState>>(emptyMap())
+//    // 公开只读状态流
+//    val collectionStates: StateFlow<Map<Int, CollectionState>> = _collectionStates.asStateFlow()
+//
+    // 单事件通知流
+    private val _collectionUpdates = MutableSharedFlow<CollectionState>(extraBufferCapacity = 10)
+    val collectionUpdates: SharedFlow<CollectionState> = _collectionUpdates.asSharedFlow()
 
     private val retrofit = RetrofitManage.getService(ApiServices::class.java)
 
@@ -42,23 +51,41 @@ class HomeViewModel : ViewModel() {
         _refreshTrigger.value = !_refreshTrigger.value
     }
 
-    // 更新单条状态的方法
-    private fun updateCollectionState(articleId: Int, isCollecting: Boolean, isCollected: Boolean) {
-        _collectionStates.update { currentMap ->
-            currentMap.toMutableMap().apply {
-                this[articleId] = CollectionState(articleId, isCollecting, isCollected)
-            }
-        }
-    }
+    //    // 更新单条状态的方法
+//    private fun updateCollectionState(articleId: Int, isCollecting: Boolean, isCollected: Boolean) {
+//        _collectionStates.update { currentMap ->
+//            currentMap.toMutableMap().apply {
+//                this[articleId] = CollectionState(articleId, isCollecting, isCollected)
+//            }
+//        }
+//    }
     // 处理收藏/取消收藏操作
     fun handleCollection(articleId: Int, shouldCollect: Boolean) {
         // 1. 立即更新本地状态为"操作中"
-        updateCollectionState(articleId, true, shouldCollect)
-
+//        updateCollectionState(articleId, true, shouldCollect)
+        // 从缓存获取当前点击项状态（或创建默认状态）
+        var currentState = if (stateCache.containsKey(articleId)) {
+            CollectionState(
+                articleId,
+                true,
+                !stateCache[articleId]!!.isCollected
+            )
+        } else {
+            CollectionState(
+                articleId,
+                true,
+                shouldCollect // 初始状态
+            )
+        }
+        val reallyShouldCollect = currentState.isCollected
         viewModelScope.launch {
+
+            // 先触发ui更新，变为正在收藏或取消收藏中
+            _collectionUpdates.emit(currentState.copy(isCollecting = false))
+            Log.i("onCollectClick", "${currentState}")
             try {
                 // 2. 发起网络请求
-                val response = if (shouldCollect) {
+                val response = if (currentState.isCollected) {
                     repository.collect(articleId)
                 } else {
                     repository.unCollect(articleId)
@@ -66,14 +93,24 @@ class HomeViewModel : ViewModel() {
 
                 // 3. 根据响应结果更新最终状态
                 if (response.errorCode == 0) {
-                    updateCollectionState(articleId, false, shouldCollect)
+                    Log.i("onCollectClick 0", "${response}")
+                    currentState = CollectionState(articleId, false, reallyShouldCollect)
                 } else {
+                    Log.i("onCollectClick 1", "${response}")
                     // 失败时恢复原状态
-                    updateCollectionState(articleId, false, !shouldCollect)
+                    currentState = CollectionState(articleId, false, !reallyShouldCollect)
                 }
             } catch (e: Exception) {
                 // 出错时恢复原状态
-                updateCollectionState(articleId, false, !shouldCollect)
+                Log.i("onCollectClick 2", "2")
+                currentState = CollectionState(articleId, false, !reallyShouldCollect)
+            } finally {
+                //触发ui更新，变为接口返回的结果
+                Log.i("onCollectClick", "${currentState}")
+                _collectionUpdates.emit(currentState)
+                //存储数据
+                stateCache[articleId] = currentState
+                Log.i("onCollectClick end", "end")
             }
         }
     }
