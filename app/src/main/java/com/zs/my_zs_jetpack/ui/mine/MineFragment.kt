@@ -20,12 +20,16 @@ class MineFragment : LazyBaseFragment<FragmentMineBinding>() {
         mineVm.getInternalBean()
     }
 
-    override fun getLayoutId(): Int = R.layout.fragment_mine
     override fun onclick() {
         binding.tvName.clickNoRepeat {
             findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
         }
+        binding.ivHead.clickNoRepeat {
+            mineVm.getInternalBean()
+        }
 
     }
+
+    override fun getLayoutId(): Int = R.layout.fragment_mine
 
 }

@@ -31,4 +31,8 @@ object MyPreUtils {
     fun getBoolean(key: String, default: Boolean): Boolean {
         return getPrefs().getBoolean(key, default)
     }
+
+    fun setBoolean(key: String, value: Boolean) {
+        getPrefs().edit().putBoolean(key, value)
+    }
 }

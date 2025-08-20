@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,55 +13,57 @@ import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.common_base.BaseFragment
-import com.zs.my_zs_jetpack.databinding.FragmentLoginBinding
+import com.zs.my_zs_jetpack.databinding.FragmentRegisterBinding
 import com.zs.my_zs_jetpack.extension.clickNoRepeat
 import com.zs.my_zs_jetpack.utils.MyToast
 
-class LoginFragment : BaseFragment<FragmentLoginBinding>() {
-    private val loginVm by viewModels<LoginViewModel>()
+class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
+
+
+    private val viewModel: RegisterViewModel by viewModels()
+
     override fun init() {
-        binding.vm = loginVm
+        binding.vm = viewModel
     }
 
-    override fun observe() {
-        loginVm.username.observe(viewLifecycleOwner) {
-            Log.i("LoginFragment0", it)
-        }
-        loginVm.password.observe(viewLifecycleOwner) {
-            Log.i("LoginFragment1", it)
-        }
-        loginVm.loginRes.observe(viewLifecycleOwner) {
-            if (!it) MyToast.toast(loginVm.loginMes.value ?: "登录失败")
-        }
 
+    override fun observe() {
+        viewModel.registerLiveData.observe(viewLifecycleOwner) {
+            MyToast.toast("注册成功")
+            findNavController().navigateUp()
+        }
     }
 
     override fun onclick() {
-        binding.llLogin.clickNoRepeat {
+        binding.rlRegister.clickNoRepeat {
             closeKeyboard(binding.etUsername, requireActivity())
             closeKeyboard(binding.etPassword, requireActivity())
-            if (TextUtils.isEmpty(loginVm.username.value)) {
+            closeKeyboard(binding.etRePassword, requireActivity())
+            if (TextUtils.isEmpty(viewModel.username.value)) {
                 MyToast.toast("请输入用户名")
                 return@clickNoRepeat
             }
-            if (TextUtils.isEmpty(loginVm.password.value)) {
+            if (TextUtils.isEmpty(viewModel.password.value)) {
                 MyToast.toast("输入密码")
                 return@clickNoRepeat
             }
-            loginVm.login()
+            if (TextUtils.isEmpty(viewModel.rePassword.value)) {
+                MyToast.toast("请输入确认密码")
+                return@clickNoRepeat
+            }
+            viewModel.register()
         }
-        binding.tvRegister.clickNoRepeat {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-        }
-        binding.tvSkip.clickNoRepeat {
+        binding.ivBack.clickNoRepeat {
             findNavController().navigateUp()
         }
         binding.ivClear.clickNoRepeat {
-            loginVm.username.value = ""
+            viewModel.username.value = ""
         }
         binding.ivPasswordVisibility.clickNoRepeat {
-            //true false 切换
-            loginVm.passIsVisibility.value = !loginVm.passIsVisibility.value!!
+            viewModel.passIsVisibility.value = !viewModel.passIsVisibility.value!!
+        }
+        binding.ivRePasswordVisibility.clickNoRepeat {
+            viewModel.rePassIsVisibility.value = !viewModel.rePassIsVisibility.value!!
         }
     }
 
@@ -72,6 +73,5 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         imm.hideSoftInputFromWindow(mEditText.windowToken, 0)
     }
 
-    override fun getLayoutId(): Int = R.layout.fragment_login
-
+    override fun getLayoutId(): Int = R.layout.fragment_register
 }

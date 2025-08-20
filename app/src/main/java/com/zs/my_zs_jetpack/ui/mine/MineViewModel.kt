@@ -32,8 +32,11 @@ class MineViewModel : BaseModel() {
             }
             Log.i("setIntegralBean2", integralBean.toString())
             if (integralBean == null) {
-                if (MyPreUtils.getBoolean(Constants.LOGIN, false)) {
+                Log.i("setIntegralBean6", MyPreUtils.getBoolean(Constants.LOGIN, false).toString())
+                if (MyPreUtils.getBoolean(Constants.LOGIN, true)) {
+                    Log.i("setIntegralBean3", integralBean.toString())
                     val data = callApi { repo.getInternal() }
+                    Log.i("setIntegralBean4", data.toString())
                     setIntegralBean(data)
                     MyPreUtils.setObject(Constants.INTEGRAL_INFO, data)
                 }
