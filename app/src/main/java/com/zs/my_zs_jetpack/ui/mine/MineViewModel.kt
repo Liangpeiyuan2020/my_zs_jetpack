@@ -19,7 +19,6 @@ class MineViewModel : BaseModel() {
     val id = MutableLiveData<String>("---")
     val rank = MutableLiveData<String>("0")
     var internal = MutableLiveData<String>("0")
-    val internalLiveData = MutableLiveData<IntegralBean>()
     val retrofit = RetrofitManage.getService(ApiServices::class.java)
     val repo = ArticleRepository(retrofit)
 
@@ -32,13 +31,9 @@ class MineViewModel : BaseModel() {
             }
             Log.i("setIntegralBean2", integralBean.toString())
             if (integralBean == null) {
-                Log.i("setIntegralBean6", MyPreUtils.getBoolean(Constants.LOGIN, false).toString())
                 if (MyPreUtils.getBoolean(Constants.LOGIN, false)) {
-                    Log.i("setIntegralBean3", integralBean.toString())
                     val data = callApi { repo.getInternal() }
-                    Log.i("setIntegralBean4", data.toString())
                     setIntegralBean(data)
-                    MyPreUtils.setObject(Constants.INTEGRAL_INFO, data)
                 }
             } else {
                 setIntegralBean(integralBean)
@@ -48,16 +43,21 @@ class MineViewModel : BaseModel() {
     }
 
     private fun setIntegralBean(integralBean: IntegralBean?) {
-        Log.i("setIntegralBean", integralBean.toString())
         integralBean?.let {
             username.value = it.username ?: "未知用户"
             id.value = it.userId.toString()
             rank.value = it.rank
             internal.value = it.coinCount.toString()
-            internalLiveData.value = integralBean!!
+            MyPreUtils.setObject(Constants.INTEGRAL_INFO, integralBean)
         }
+    }
 
-
+    fun resetIntegralBean() {
+        username.value = "未知用户"
+        id.value = "--"
+        rank.value = "0"
+        internal.value = "0"
+        MyPreUtils.clearKey(Constants.INTEGRAL_INFO)
     }
 
 }
