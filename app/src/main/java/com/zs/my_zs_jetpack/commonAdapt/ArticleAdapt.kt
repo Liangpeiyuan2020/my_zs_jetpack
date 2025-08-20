@@ -7,8 +7,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zs.my_zs_jetpack.databinding.ItemHomeArticleBinding
 import com.zs.my_zs_jetpack.api.Article
+import com.zs.my_zs_jetpack.extension.clickNoRepeat
+import com.zs.my_zs_jetpack.api.CollectionState
+
 // ArticleAdapter.kt
-class ArticleAdapter : PagingDataAdapter<Article, ArticleAdapter.ArticleViewHolder>(Article_COMPARATOR) {
+class ArticleAdapter(private val onCollectClick: (Article) -> Unit) :
+    PagingDataAdapter<Article, ArticleAdapter.ArticleViewHolder>(Article_COMPARATOR) {
+
+    // 监听状态变化的关键类
+    private val collectionStates = mutableMapOf<Int, CollectionState>()
 
     companion object {
         private val Article_COMPARATOR = object : DiffUtil.ItemCallback<Article>() {
@@ -23,8 +30,20 @@ class ArticleAdapter : PagingDataAdapter<Article, ArticleAdapter.ArticleViewHold
     inner class ArticleViewHolder(private val binding: ItemHomeArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(article: Article) {
-            binding.dataBean = article
+        fun bind(article: Article, state: CollectionState, onClick: (Article) -> Unit) {
+            val displayArticle = article.copy(
+                collect = if (state.isCollecting) !state.isCollected else state.isCollected
+            )
+
+            binding.dataBean = displayArticle
+//            binding.dataBean = article
+
+            binding.isCollecting = state.isCollecting
+            binding.ivCollect.clickNoRepeat {
+                if (!state.isCollecting) {
+                    onClick(article)
+                }
+            }
             binding.executePendingBindings()
         }
     }
@@ -38,7 +57,28 @@ class ArticleAdapter : PagingDataAdapter<Article, ArticleAdapter.ArticleViewHold
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         getItem(position)?.let { article ->
-            holder.bind(article)
+            val currentState =
+                collectionStates[article.id] ?: CollectionState(article.id, false, article.collect)
+            holder.bind(article, currentState, onCollectClick)
         }
+    }
+
+    // 局部更新方法
+    fun updateCollectionState(state: CollectionState) {
+        // 1. 更新本地状态
+        collectionStates[state.articleId] = state
+
+        // 2. 查找目标位置
+        val position = findPositionById(state.articleId)
+
+        // 3. 执行局部刷新
+        if (position != RecyclerView.NO_POSITION) {
+            notifyItemChanged(position)
+        }
+    }
+
+    // 查找文章位置
+    private fun findPositionById(articleId: Int): Int {
+        return snapshot().items.indexOfFirst { it.id == articleId }
     }
 }

@@ -7,6 +7,7 @@
         <variable
             name="dataBean"
             type="com.zs.my_zs_jetpack.api.Article" />
+        <variable name="isCollecting" type="boolean"/>
 
     </data>
 
@@ -23,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding"
-            android:text="@{dataBean.topTitle}"
+            android:text="无"
             android:textColor="@color/red"
             tools:text="置顶 " />
 

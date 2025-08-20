@@ -76,7 +76,9 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
             }
             observeLoadingState(projectTabArticleAdapt)
         } else {
-            accountTabArticleAdapt = ArticleAdapter()
+            accountTabArticleAdapt = ArticleAdapter(
+                onCollectClick = { article -> Log.i("onCollectClick", "0") }
+            )
             binding.recyclerView.adapter = accountTabArticleAdapt
             binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
             viewLifecycleOwner.lifecycleScope.launch {

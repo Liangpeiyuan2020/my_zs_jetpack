@@ -75,4 +75,17 @@ interface ApiServices {
 
     @GET("/user/logout/json")
     suspend fun logout():ApiResponse<Any>
+
+    /**
+     * 收藏
+     */
+    @POST("/lg/collect/{id}/json")
+    suspend fun collect(@Path("id")id:Int):ApiResponse<Any>
+
+    /**
+     * 取消收藏
+     */
+    @POST("/lg/uncollect_originId/{id}/json")
+    suspend fun unCollect(@Path("id") id: Int): ApiResponse<Any>
+
 }

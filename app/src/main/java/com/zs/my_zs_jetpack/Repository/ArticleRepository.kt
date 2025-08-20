@@ -86,4 +86,12 @@ class ArticleRepository(val services: ApiServices) {
     suspend fun logout(): ApiResponse<Any> {
         return services.logout()
     }
+
+    suspend fun collect(id: Int): ApiResponse<Any> {
+        return services.collect(id)
+    }
+
+    suspend fun unCollect(id: Int): ApiResponse<Any> {
+        return services.unCollect(id)
+    }
 }

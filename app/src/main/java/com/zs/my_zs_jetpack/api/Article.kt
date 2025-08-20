@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Article(
     var id: Int,
-    var topTitle: String,
+//    var topTitle: String,
     var author: String,
     @SerializedName("niceDate") var date: String,
     var title: String,

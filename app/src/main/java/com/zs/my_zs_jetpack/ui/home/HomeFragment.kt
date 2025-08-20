@@ -41,12 +41,28 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-        articleAdapt = ArticleAdapter()
+        articleAdapt = ArticleAdapter(
+            onCollectClick = { article: Article ->
+                Log.i("onCollectClick", "0")
+                val shouldCollect = !article.collect
+                homeVM.handleCollection(article.id, shouldCollect)
+            }
+        )
         binding.recyclerView.adapter = articleAdapt
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeVM.articles.collectLatest { pagingData ->
                     articleAdapt.submitData(pagingData)
+                }
+            }
+        }
+        // 启动状态监听
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeVM.collectionStates.collectLatest { statesMap ->
+                    statesMap.values.forEach { state ->
+                        articleAdapt.updateCollectionState(state)
+                    }
                 }
             }
         }
