@@ -54,7 +54,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
         val adapt = MyViewPageAdapt(requireActivity(), fragmentList)
         binding.viewPage.adapter = adapt
-//        binding.viewPage.offscreenPageLimit = fragmentList.size
+        binding.viewPage.offscreenPageLimit = fragmentList.size
         binding.btnNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> {

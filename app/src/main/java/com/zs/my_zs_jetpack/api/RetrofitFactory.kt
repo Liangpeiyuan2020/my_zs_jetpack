@@ -67,7 +67,7 @@ object RetrofitFactory {
     private fun getLogInterceptor(): Interceptor {
         //http log 拦截器
         return HttpLoggingInterceptor("OkHttp").apply {
-            setPrintLevel(HttpLoggingInterceptor.Level.BODY)
+            setPrintLevel(HttpLoggingInterceptor.Level.BASIC)
             setColorLevel(Level.INFO)
         }
     }

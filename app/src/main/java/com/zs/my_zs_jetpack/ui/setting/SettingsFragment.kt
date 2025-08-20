@@ -33,7 +33,6 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
 
     override fun onclick() {
         binding.tvLogout.clickNoRepeat {
-
             settingsVm.logout()
         }
     }

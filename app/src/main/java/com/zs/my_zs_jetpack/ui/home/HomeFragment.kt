@@ -16,19 +16,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
-    override fun getLayoutId(): Int = R.layout.fragment_home
     private val homeVM: HomeViewModel by viewModels<HomeViewModel>()
     private lateinit var articleAdapt: ArticleAdapter
-
-
     override fun lazyInit() {
         intiView()
     }
 
+
     override fun observe() {
 
     }
-
 
     private fun intiView() {
         binding.vm = homeVM
@@ -43,20 +40,7 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
             it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-//        val articleList = mutableListOf<Article>()
-//        articleList.apply {
-//            add(Article(1, "top1", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(2, "top2", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(3, "top3", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(4, "top4", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(5, "top5", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(6, "top6", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(7, "top7", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(8, "top8", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(9, "top9", "auth1", "date1", "title1", "articleTag1", false))
-//            add(Article(0, "top1", "auth1", "date1", "title1", "articleTag1", false))
-//        }
-//        Log.i("articleAdapt", articleList.size.toString())
+
         articleAdapt = ArticleAdapter()
         binding.recyclerView.adapter = articleAdapt
         viewLifecycleOwner.lifecycleScope.launch {
@@ -70,4 +54,5 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
     }
 
 
+    override fun getLayoutId(): Int = R.layout.fragment_home
 }

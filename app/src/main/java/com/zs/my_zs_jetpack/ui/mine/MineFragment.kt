@@ -37,7 +37,7 @@ class MineFragment : LazyBaseFragment<FragmentMineBinding>() {
         }
         binding.ivHead.clickNoRepeat {
 //            mineVm.getInternalBean()
-            mineVm.resetIntegralBean()
+//            mineVm.resetIntegralBean()
         }
         binding.clSet.clickNoRepeat {
             val options = navOptions {

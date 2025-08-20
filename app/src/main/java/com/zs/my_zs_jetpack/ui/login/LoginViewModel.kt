@@ -13,6 +13,7 @@ import com.zs.my_zs_jetpack.api.UserBean
 import com.zs.my_zs_jetpack.common_base.BaseModel
 import com.zs.my_zs_jetpack.constants.Constants
 import com.zs.my_zs_jetpack.event.LoginEvent
+import com.zs.my_zs_jetpack.event.LogoutEvent
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -30,12 +31,13 @@ class LoginViewModel : BaseModel() {
             loginRes.value = callApi { repo.login(username.value!!, password.value!!) }
             Log.i("setIntegralBean20", loginRes.value.toString())
             if (loginRes.value?.errorCode == 0) {
-                EventBus.getDefault().post(LoginEvent())
                 MyPreUtils.setObject(Constants.USER_INFO, loginRes.value!!.data)
                 MyPreUtils.setBoolean(Constants.LOGIN, true)
+                EventBus.getDefault().post(LoginEvent())
             } else {
                 MyPreUtils.clearKey(Constants.USER_INFO)
-                MyPreUtils.setBoolean(Constants.LOGIN, false)
+                MyPreUtils.clearKey(Constants.LOGIN)
+                EventBus.getDefault().post(LogoutEvent())
             }
 
         }
