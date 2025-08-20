@@ -1,5 +1,6 @@
 package com.zs.my_zs_jetpack.ui.main
 
+import MyPagerAdapterBuilder
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.commonAdapt.MyViewPageAdapt
 import com.zs.my_zs_jetpack.common_base.BaseFragment
@@ -19,42 +21,54 @@ import com.zs.my_zs_jetpack.ui.tab.TabFragment
 
 class MainFragment : BaseFragment<FragmentMainBinding>() {
     override fun getLayoutId(): Int = R.layout.fragment_main
+    private lateinit var pagerAdapter: FragmentStateAdapter
 
-    private val fragmentList = arrayListOf<Fragment>()
-    private val homeFragment by lazy {
-        HomeFragment()
-    }
-    private val projectFragment by lazy {
-        TabFragment().apply {
-            arguments = Bundle().apply { putInt("type", 0) }
-        }
-    }
-    private val squareFragment by lazy {
-        SquareFragment()
-    }
-    private val publishNumberFragment by lazy {
-        TabFragment().apply {
-            arguments = Bundle().apply { putInt("type", 1) }
-        }
-    }
-    private val mineFragment by lazy {
-        MineFragment()
-    }
+    //    private val fragmentList = arrayListOf<Fragment>()
+//    private val homeFragment by lazy {
+//        HomeFragment()
+//    }
+//    private val projectFragment by lazy {
+//        TabFragment().apply {
+//            arguments = Bundle().apply { putInt("type", 0) }
+//        }
+//    }
+//    private val squareFragment by lazy {
+//        SquareFragment()
+//    }
+//    private val publishNumberFragment by lazy {
+//        TabFragment().apply {
+//            arguments = Bundle().apply { putInt("type", 1) }
+//        }
+//    }
+//    private val mineFragment by lazy {
+//        MineFragment()
+//    }
     private val mainVM: MainViewModel? by viewModels()
 
 
     override fun init() {
         binding.vm = mainVM
-        fragmentList.apply {
-            add(homeFragment)
-            add(projectFragment)
-            add(squareFragment)
-            add(publishNumberFragment)
-            add(mineFragment)
-        }
-        val adapt = MyViewPageAdapt(requireActivity(), fragmentList)
-        binding.viewPage.adapter = adapt
-        binding.viewPage.offscreenPageLimit = fragmentList.size
+        pagerAdapter = MyPagerAdapterBuilder(requireActivity())
+            .addFragment(HomeFragment::class)
+            .addFragment(TabFragment::class, Bundle().apply { putInt("type", 0) })
+            .addFragment(SquareFragment::class)
+            .addFragment(TabFragment::class, Bundle().apply { putInt("type", 1) })
+            .addFragment(MineFragment::class)
+            .build()
+
+//        fragmentList.apply {
+//            add(homeFragment)
+//            add(projectFragment)
+//            add(squareFragment)
+//            add(publishNumberFragment)
+//            add(mineFragment)
+//        }
+//        val adapt = MyViewPageAdapt(requireActivity(), fragmentList)
+//        binding.viewPage.adapter = adapt
+//        binding.viewPage.offscreenPageLimit = fragmentList.size
+
+        binding.viewPage.adapter = pagerAdapter
+        binding.viewPage.offscreenPageLimit = pagerAdapter.itemCount
         binding.btnNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> {
@@ -69,5 +83,10 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             true
         }
 
+    }
+
+    override fun onDestroyView() {
+//        (pagerAdapter as? MyPagerAdapterBuilder.MyPagerAdapter)?.clearCache()
+        super.onDestroyView()
     }
 }

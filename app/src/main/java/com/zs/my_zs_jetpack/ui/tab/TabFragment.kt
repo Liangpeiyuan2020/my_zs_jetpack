@@ -1,13 +1,11 @@
 package com.zs.my_zs_jetpack.ui.tab
 
+import MyPagerAdapterBuilder
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.map
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.api.ArticleTab
@@ -18,7 +16,9 @@ import com.zs.my_zs_jetpack.commonAdapt.MyViewPageAdapt
 class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
 
     private val tabVm: TabViewModel by viewModels<TabViewModel>()
-    private lateinit var viewPagerAdapter: MyViewPageAdapt
+
+    //    private lateinit var viewPagerAdapter: MyViewPageAdapt
+    private lateinit var viewPagerAdapter: FragmentStateAdapter
     private var type: Int = 0
     override fun lazyInit() {
         type = arguments?.getInt("type") ?: 0
@@ -38,19 +38,34 @@ class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
     }
 
     private fun initView(tabList: List<ArticleTab>) {
-        val fragmentList = arrayListOf<Fragment>().apply {
+//        val fragmentList = arrayListOf<Fragment>().apply {
+//            tabList.forEach {
+//                add(TabItemFragment().apply {
+//                    //想各个fragment传递信息
+//                    val bundle = Bundle()
+//                    bundle.putInt("type", type)
+//                    bundle.putInt("tabId", it.id)
+//                    bundle.putString("name", it.name)
+//                    arguments = bundle
+//                })
+//            }
+//        }
+//        viewPagerAdapter = MyViewPageAdapt(requireActivity(), fragmentList)
+
+        viewPagerAdapter = MyPagerAdapterBuilder(requireActivity()).apply {
             tabList.forEach {
-                add(TabItemFragment().apply {
-                    //想各个fragment传递信息
-                    val bundle = Bundle()
-                    bundle.putInt("type", type)
-                    bundle.putInt("tabId", it.id)
-                    bundle.putString("name", it.name)
-                    arguments = bundle
-                })
+                addFragment(
+                    TabItemFragment::class,
+                    Bundle().apply {
+                        //各个fragment传递信息
+                        val bundle = Bundle()
+                        bundle.putInt("type", type)
+                        bundle.putInt("tabId", it.id)
+                        bundle.putString("name", it.name)
+                        arguments = bundle
+                    })
             }
-        }
-        viewPagerAdapter = MyViewPageAdapt(requireActivity(), fragmentList)
+        }.build()
 
         binding.vpArticleFragment.adapter = viewPagerAdapter
         TabLayoutMediator(binding.tabLayout, binding.vpArticleFragment) { tab, position ->
