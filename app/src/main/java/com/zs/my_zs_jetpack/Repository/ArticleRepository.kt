@@ -63,6 +63,7 @@ class ArticleRepository(val services: ApiServices) {
 
     suspend fun getInternal(): IntegralBean {
         val dataList = services.getIntegral()
+        Log.i("LoginFragment", dataList.toString())
         return dataList.data
     }
 
@@ -72,7 +73,11 @@ class ArticleRepository(val services: ApiServices) {
         return dataList
     }
 
-    suspend fun register(userName: String, userPassword: String, rePassword: String):ApiResponse<Any> {
+    suspend fun register(
+        userName: String,
+        userPassword: String,
+        rePassword: String
+    ): ApiResponse<Any> {
         val dataList = services.register(userName, userPassword, rePassword)
         Log.i("LoginFragment", dataList.toString())
         return dataList

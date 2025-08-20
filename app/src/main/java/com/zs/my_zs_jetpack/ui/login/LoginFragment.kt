@@ -32,7 +32,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
             Log.i("LoginFragment1", it)
         }
         loginVm.loginRes.observe(viewLifecycleOwner) {
-            if (!it) MyToast.toast(loginVm.loginMes.value ?: "登录失败")
+            if (it?.errorCode == 0) findNavController().navigateUp()
+            else MyToast.toast(loginVm.loginRes.value?.errorMsg ?: "登录失败")
+
         }
 
     }

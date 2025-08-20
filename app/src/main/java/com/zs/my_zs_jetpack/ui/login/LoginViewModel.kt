@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zs.my_zs_jetpack.Repository.ArticleRepository
+import com.zs.my_zs_jetpack.api.ApiResponse
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.RetrofitManage
 import com.zs.my_zs_jetpack.api.UserBean
@@ -19,25 +20,19 @@ class LoginViewModel : BaseModel() {
     var username = MutableLiveData<String>()
     var password = MutableLiveData<String>()
     var passIsVisibility = MutableLiveData<Boolean>()
-    var loginRes = MutableLiveData<Boolean>(false)
-    var loginMes = MutableLiveData<String>()
+    var loginRes = MutableLiveData<ApiResponse<UserBean>?>()
 
     fun login() {
         if (TextUtils.isEmpty(username.value) || TextUtils.isEmpty(password.value)) return
         viewModelScope.launch {
-            val data = callApi { repo.login(username.value!!, password.value!!) }
-            Log.i("setIntegralBean20", data.toString())
-            if (data?.errorCode == 0) {
-
-                Log.i("setIntegralBean20", data.data.toString())
-                loginRes.value = true
-                MyPreUtils.setObject(Constants.USER_INFO, data.data)
+            loginRes.value = callApi { repo.login(username.value!!, password.value!!) }
+            Log.i("setIntegralBean20", loginRes.value.toString())
+            if (loginRes.value?.errorCode == 0) {
+                MyPreUtils.setObject(Constants.USER_INFO, loginRes.value!!.data)
                 MyPreUtils.setBoolean(Constants.LOGIN, true)
             } else {
                 MyPreUtils.clearKey(Constants.USER_INFO)
                 MyPreUtils.setBoolean(Constants.LOGIN, false)
-                loginMes.value = data?.errorMsg
-                loginRes.value = false
             }
 
         }

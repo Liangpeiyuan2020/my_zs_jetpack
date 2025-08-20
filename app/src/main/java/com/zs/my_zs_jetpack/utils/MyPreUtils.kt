@@ -33,6 +33,6 @@ object MyPreUtils {
     }
 
     fun setBoolean(key: String, value: Boolean) {
-        getPrefs().edit().putBoolean(key, value)
+        getPrefs().edit().putBoolean(key, value).apply()
     }
 }
