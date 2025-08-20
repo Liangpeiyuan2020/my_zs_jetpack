@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentMineBinding
@@ -37,6 +38,21 @@ class MineFragment : LazyBaseFragment<FragmentMineBinding>() {
         binding.ivHead.clickNoRepeat {
 //            mineVm.getInternalBean()
             mineVm.resetIntegralBean()
+        }
+        binding.clSet.clickNoRepeat {
+            val options = navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            }
+            findNavController().navigate(
+                R.id.action_mainFragment_to_settingsFragment,
+                null,
+                options
+            )
         }
 
     }

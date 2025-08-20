@@ -72,4 +72,7 @@ interface ApiServices {
         @Query("password") password: String,
         @Query("repassword") repassword: String
     ): ApiResponse<Any>
+
+    @GET("/user/logout/json")
+    suspend fun logout():ApiResponse<Any>
 }

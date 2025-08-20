@@ -82,4 +82,8 @@ class ArticleRepository(val services: ApiServices) {
         Log.i("LoginFragment", dataList.toString())
         return dataList
     }
+
+    suspend fun logout(): ApiResponse<Any> {
+        return services.logout()
+    }
 }
