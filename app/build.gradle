@@ -104,7 +104,7 @@ dependencies {
     // ========== 其他工具 ==========
     // EventBus
     implementation "org.greenrobot:eventbus:$eventbus_version"
-    kapt "org.greenrobot:eventbus-annotation-processor:$eventbus_version" // 可选：注解处理
+//    kapt "org.greenrobot:eventbus-annotation-processor:$eventbus_version" // 可选：注解处理
 
     implementation "io.github.scwang90:refresh-layout-kernel:$smart_version"      //核心必须依赖
     implementation "io.github.scwang90:refresh-header-classics:$smart_version"   //经典刷新头
