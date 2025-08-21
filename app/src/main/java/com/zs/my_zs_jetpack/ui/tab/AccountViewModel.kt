@@ -46,7 +46,9 @@ class AccountViewModel : ViewModel() {
             _accountTableId.value = query
         }
     }
-
+    fun clearStateCache(){
+        stateCache.clear()
+    }
     // 处理收藏/取消收藏操作
     fun handleCollection(articleId: Int, articleCollect: Boolean) {
         // 从缓存获取当前点击项状态（或创建默认状态）

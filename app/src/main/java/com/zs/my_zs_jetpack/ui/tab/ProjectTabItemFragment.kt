@@ -67,6 +67,7 @@ class ProjectTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
         (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.refreshLayout.setOnRefreshListener {
             projectAdapt.refresh()
+            projectVm.clearStateCache()
             it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
         }
         //上拉加载

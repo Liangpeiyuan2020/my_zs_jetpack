@@ -1,7 +1,7 @@
 package com.zs.my_zs_jetpack.ui.tab
 
 
-
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -35,15 +35,7 @@ class AccountTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     }
 
     private fun initView() {
-        //关闭更新动画
-        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.refreshLayout.setOnRefreshListener {
-            it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
-        }
-        //上拉加载
-        binding.refreshLayout.setOnLoadMoreListener {
-            it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
-        }
+
 
         accountAdapt = ArticleAdapter(
             onCollectClick = { article ->
@@ -59,15 +51,25 @@ class AccountTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
                 }
             }
         }
+        observeLoadingState(accountAdapt)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                accountVm.collectionUpdates.collect { state->
+                accountVm.collectionUpdates.collect { state ->
                     accountAdapt.updateAdaptCollectionState(state)
                 }
             }
         }
-        observeLoadingState(accountAdapt)
-
+        //关闭更新动画
+        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.refreshLayout.setOnRefreshListener {
+            accountAdapt.refresh()
+            accountVm.clearStateCache()
+            it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+        }
+        //上拉加载
+        binding.refreshLayout.setOnLoadMoreListener {
+            it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
+        }
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_tab_item

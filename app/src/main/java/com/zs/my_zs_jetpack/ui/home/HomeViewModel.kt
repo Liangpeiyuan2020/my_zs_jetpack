@@ -51,6 +51,9 @@ class HomeViewModel : ViewModel() {
         _refreshTrigger.value = !_refreshTrigger.value
     }
 
+    fun clearStateCache() {
+        stateCache.clear()
+    }
 
     // 处理收藏/取消收藏操作
     fun handleCollection(articleId: Int, articleCollect: Boolean) {
