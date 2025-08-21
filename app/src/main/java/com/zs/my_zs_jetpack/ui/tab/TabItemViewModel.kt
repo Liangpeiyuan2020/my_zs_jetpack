@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 
 class TabItemViewModel : ViewModel() {
 
@@ -31,7 +32,6 @@ class TabItemViewModel : ViewModel() {
 //    private val _collectionStates = MutableStateFlow<Map<Int, CollectionState>>(emptyMap())
 //    // 公开只读状态流
 //    val collectionStates: StateFlow<Map<Int, CollectionState>> = _collectionStates.asStateFlow()
-
 
 
     // 单事件通知流
@@ -69,6 +69,21 @@ class TabItemViewModel : ViewModel() {
 
     }
 
-
+    fun handleCollection(articleId: Int, shouldCollect: Boolean) {
+        val currentState = if (stateCache.containsKey(articleId)) CollectionState(
+            articleId,
+            true,
+            !stateCache[articleId]!!.isCollected
+        )
+        else CollectionState(
+            articleId,
+            true,
+            shouldCollect
+        )
+        val reallyShouldCollect = currentState.isCollected
+        viewModelScope.launch {
+            _collectionUpdates.emit(currentState)
+        }
+    }
 
 }

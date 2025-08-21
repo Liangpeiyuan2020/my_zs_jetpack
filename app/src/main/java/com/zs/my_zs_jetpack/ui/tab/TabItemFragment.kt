@@ -77,7 +77,10 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
             observeLoadingState(projectTabArticleAdapt)
         } else {
             accountTabArticleAdapt = ArticleAdapter(
-                onCollectClick = { article -> Log.i("onCollectClick", "0") }
+                onCollectClick = { article ->
+                    val shouldCollect = !article.collect
+                    tabItemVm.handleCollection(article.id, shouldCollect)
+                }
             )
             binding.recyclerView.adapter = accountTabArticleAdapt
             binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
@@ -86,6 +89,11 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
                     tabItemVm.accountTabItemArticles.collect {
                         accountTabArticleAdapt.submitData(it)
                     }
+                }
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    tabItemVm.collectionUpdates
                 }
             }
             observeLoadingState(accountTabArticleAdapt)
