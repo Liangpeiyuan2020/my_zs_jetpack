@@ -51,42 +51,27 @@ class HomeViewModel : ViewModel() {
         _refreshTrigger.value = !_refreshTrigger.value
     }
 
-    //    // 更新单条状态的方法
-//    private fun updateCollectionState(articleId: Int, isCollecting: Boolean, isCollected: Boolean) {
-//        _collectionStates.update { currentMap ->
-//            currentMap.toMutableMap().apply {
-//                this[articleId] = CollectionState(articleId, isCollecting, isCollected)
-//            }
-//        }
-//    }
 
     // 处理收藏/取消收藏操作
-    fun handleCollection(articleId: Int, shouldCollect: Boolean) {
-        // 1. 立即更新本地状态为"操作中"
-//        updateCollectionState(articleId, true, shouldCollect)
+    fun handleCollection(articleId: Int, articleCollect: Boolean) {
         // 从缓存获取当前点击项状态（或创建默认状态）
-        var currentState = if (stateCache.containsKey(articleId)) {
-            CollectionState(
-                articleId,
-                true,
-                !stateCache[articleId]!!.isCollected
-            )
-        } else {
-            CollectionState(
-                articleId,
-                true,
-                shouldCollect // 初始状态
-            )
-        }
-        val reallyShouldCollect = currentState.isCollected
-        viewModelScope.launch {
+        val nowCollectState = if (stateCache.containsKey(articleId))
+            stateCache[articleId]!!.isCollected // 初始状态
+        else
+            articleCollect // 初始状态
 
+        val shouldCollect = !nowCollectState
+        var currentState = CollectionState(
+            articleId,
+            true,
+            nowCollectState
+        )
+        viewModelScope.launch {
             // 先触发ui更新，变为正在收藏或取消收藏中
-            _collectionUpdates.emit(currentState.copy(isCollecting = false))
-            Log.i("onCollectClick", "${currentState}")
+            _collectionUpdates.emit(currentState)
             try {
                 // 2. 发起网络请求
-                val response = if (currentState.isCollected) {
+                val response = if (shouldCollect) {
                     repository.collect(articleId)
                 } else {
                     repository.unCollect(articleId)
@@ -94,24 +79,19 @@ class HomeViewModel : ViewModel() {
 
                 // 3. 根据响应结果更新最终状态
                 if (response.errorCode == 0) {
-                    Log.i("onCollectClick 0", "${response}")
-                    currentState = CollectionState(articleId, false, reallyShouldCollect)
+                    currentState = CollectionState(articleId, false, shouldCollect)
                 } else {
-                    Log.i("onCollectClick 1", "${response}")
                     // 失败时恢复原状态
-                    currentState = CollectionState(articleId, false, !reallyShouldCollect)
+                    currentState = CollectionState(articleId, false, nowCollectState)
                 }
             } catch (e: Exception) {
                 // 出错时恢复原状态
-                Log.i("onCollectClick 2", "2")
-                currentState = CollectionState(articleId, false, !reallyShouldCollect)
+                currentState = CollectionState(articleId, false, nowCollectState)
             } finally {
                 //触发ui更新，变为接口返回的结果
-                Log.i("onCollectClick", "${currentState}")
                 _collectionUpdates.emit(currentState)
                 //存储数据
                 stateCache[articleId] = currentState
-                Log.i("onCollectClick end", "end")
             }
         }
     }

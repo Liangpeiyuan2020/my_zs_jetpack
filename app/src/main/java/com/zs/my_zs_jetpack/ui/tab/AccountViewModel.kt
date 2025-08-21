@@ -48,7 +48,7 @@ class AccountViewModel : ViewModel() {
     }
 
     fun handleCollection(articleId: Int, shouldCollect: Boolean) {
-        val currentState = if (stateCache.containsKey(articleId))
+        var currentState = if (stateCache.containsKey(articleId))
             CollectionState(
                 articleId,
                 true,
@@ -62,8 +62,32 @@ class AccountViewModel : ViewModel() {
             )
         val reallyShouldCollect = currentState.isCollected
         viewModelScope.launch {
+            // 先触发ui更新，变为正在收藏或取消收藏中
             _collectionUpdates.emit(currentState)
+            try {
+                // 2. 发起网络请求
+                val response = if (reallyShouldCollect) {
+                    repository.collect(articleId)
+                } else {
+                    repository.unCollect(articleId)
+                }
+
+                // 3. 根据响应结果更新最终状态
+                if (response.errorCode == 0) {
+                    currentState = CollectionState(articleId, false, reallyShouldCollect)
+                } else {
+                    // 失败时恢复原状态
+                    currentState = CollectionState(articleId, false, !reallyShouldCollect)
+                }
+            } catch (e: Exception) {
+                // 出错时恢复原状态
+                currentState = CollectionState(articleId, false, !reallyShouldCollect)
+            } finally {
+                //触发ui更新，变为接口返回的结果
+                _collectionUpdates.emit(currentState)
+                //存储数据
+                stateCache[articleId] = currentState
+            }
         }
     }
-
 }

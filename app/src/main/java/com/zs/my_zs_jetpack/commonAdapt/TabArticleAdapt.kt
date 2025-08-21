@@ -7,10 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zs.my_zs_jetpack.api.AllDataBean
 import com.zs.my_zs_jetpack.api.Article
+import com.zs.my_zs_jetpack.api.CollectionState
 import com.zs.my_zs_jetpack.databinding.ItemHomeArticleBinding
 import com.zs.my_zs_jetpack.databinding.ItemTabArticleBinding
+import com.zs.my_zs_jetpack.extension.clickNoRepeat
 
-class TabArticleAdapt: PagingDataAdapter<AllDataBean, TabArticleAdapt.TabArticleViewHolder>(Article_COMPARATOR) {
+class TabArticleAdapt(private val onCollectClick: (AllDataBean) -> Unit) :
+    PagingDataAdapter<AllDataBean, TabArticleAdapt.TabArticleViewHolder>(Article_COMPARATOR) {
+    val collectionStates = mutableMapOf<Int, CollectionState>()
 
     companion object {
         private val Article_COMPARATOR = object : DiffUtil.ItemCallback<AllDataBean>() {
@@ -25,8 +29,14 @@ class TabArticleAdapt: PagingDataAdapter<AllDataBean, TabArticleAdapt.TabArticle
     inner class TabArticleViewHolder(private val binding: ItemTabArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(dataBean: AllDataBean) {
-            binding.dataBean = dataBean
+        fun bind(dataBean: AllDataBean, state: CollectionState, onClick: (AllDataBean) -> Unit) {
+            val newDateBean = dataBean.copy(collect = state.isCollected)
+            binding.dataBean = newDateBean
+            binding.ivCollect.clickNoRepeat {
+                if (!state.isCollecting) {
+                    onClick(newDateBean)
+                }
+            }
             binding.executePendingBindings()
         }
     }
@@ -40,7 +50,23 @@ class TabArticleAdapt: PagingDataAdapter<AllDataBean, TabArticleAdapt.TabArticle
 
     override fun onBindViewHolder(holder: TabArticleViewHolder, position: Int) {
         getItem(position)?.let { article ->
-            holder.bind(article)
+            val currentState =
+                collectionStates[article.id] ?: CollectionState(article.id, false, article.collect)
+            holder.bind(article, currentState, onCollectClick)
         }
+    }
+
+    fun updateAdaptCollectionState(state: CollectionState) {
+        collectionStates[state.articleId] = state
+        val position = findPositionById(state)
+
+        if (position != RecyclerView.NO_POSITION) {
+            notifyItemChanged(position)
+        }
+
+    }
+
+    private fun findPositionById(state: CollectionState): Int {
+        return snapshot().items.indexOfFirst { it.id == state.articleId }
     }
 }

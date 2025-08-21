@@ -44,8 +44,7 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
         articleAdapt = ArticleAdapter(
             onCollectClick = { article: Article ->
                 Log.i("onCollectClick", "${article.toString()}")
-                val shouldCollect = !article.collect
-                homeVM.handleCollection(article.id, shouldCollect)
+                homeVM.handleCollection(article.id, article.collect)
             }
         )
         binding.recyclerView.adapter = articleAdapt
@@ -60,7 +59,7 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeVM.collectionUpdates.collect { state ->
-                    articleAdapt.updateCollectionState(state)
+                    articleAdapt.updateAdaptCollectionState(state)
 
                 }
             }

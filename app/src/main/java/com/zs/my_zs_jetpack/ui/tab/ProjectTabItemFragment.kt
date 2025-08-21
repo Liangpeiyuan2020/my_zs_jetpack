@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  */
 class ProjectTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     private val projectVm by viewModels<ProjectViewModel>()
-    private lateinit var projectTabArticleAdapt: TabArticleAdapt
+    private lateinit var projectAdapt: TabArticleAdapt
 
     private var tabId: Int = 0
 
@@ -50,21 +50,27 @@ class ProjectTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
         binding.refreshLayout.setOnLoadMoreListener {
             it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
         }
-        projectTabArticleAdapt = TabArticleAdapt()
-        binding.recyclerView.adapter = projectTabArticleAdapt
+        projectAdapt = TabArticleAdapt(
+            { article ->
+                projectVm.handleCollection(article.id, article.collect)
+            }
+        )
+        binding.recyclerView.adapter = projectAdapt
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 projectVm.projectTabItemArticles.collect {
-                    projectTabArticleAdapt.submitData(it)
+                    projectAdapt.submitData(it)
                 }
             }
         }
-        observeLoadingState(projectTabArticleAdapt)
+        observeLoadingState(projectAdapt)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                projectVm.collectionUpdates
+                projectVm.collectionUpdates.collect { state ->
+                    projectAdapt.updateAdaptCollectionState(state)
+                }
             }
         }
     }

@@ -1,12 +1,8 @@
 package com.zs.my_zs_jetpack.ui.tab
 
 
-import android.os.Bundle
-import android.util.Log
+
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,11 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
-import com.zs.my_zs_jetpack.commonAdapt.TabArticleAdapt
-import com.zs.my_zs_jetpack.common_base.BaseFragment
+
 import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentTabItemBinding
-import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import kotlinx.coroutines.launch
 
 /**
@@ -30,7 +24,7 @@ import kotlinx.coroutines.launch
 class AccountTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     private val accountVm by viewModels<AccountViewModel>()
 
-    private lateinit var accountTabArticleAdapt: ArticleAdapter
+    private lateinit var accountAdapt: ArticleAdapter
 
     private var tabId: Int = 0
 
@@ -51,18 +45,18 @@ class AccountTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
             it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
         }
 
-        accountTabArticleAdapt = ArticleAdapter(
+        accountAdapt = ArticleAdapter(
             onCollectClick = { article ->
                 val shouldCollect = !article.collect
                 accountVm.handleCollection(article.id, shouldCollect)
             }
         )
-        binding.recyclerView.adapter = accountTabArticleAdapt
+        binding.recyclerView.adapter = accountAdapt
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 accountVm.accountTabItemArticles.collect {
-                    accountTabArticleAdapt.submitData(it)
+                    accountAdapt.submitData(it)
                 }
             }
         }
@@ -71,7 +65,7 @@ class AccountTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
                 accountVm.collectionUpdates
             }
         }
-        observeLoadingState(accountTabArticleAdapt)
+        observeLoadingState(accountAdapt)
 
     }
 

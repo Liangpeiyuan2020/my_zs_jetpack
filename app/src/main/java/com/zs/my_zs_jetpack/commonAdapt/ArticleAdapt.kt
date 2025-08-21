@@ -32,11 +32,10 @@ class ArticleAdapter(private val onCollectClick: (Article) -> Unit) :
 
         fun bind(article: Article, state: CollectionState, onClick: (Article) -> Unit) {
             val displayArticle = article.copy(
-                collect = if (state.isCollecting) !state.isCollected else state.isCollected
+                collect = state.isCollected
             )
 
             binding.dataBean = displayArticle
-//            binding.dataBean = article
 
             binding.isCollecting = state.isCollecting
             binding.ivCollect.clickNoRepeat {
@@ -64,7 +63,7 @@ class ArticleAdapter(private val onCollectClick: (Article) -> Unit) :
     }
 
     // 局部更新方法
-    fun updateCollectionState(state: CollectionState) {
+    fun updateAdaptCollectionState(state: CollectionState) {
         // 1. 更新本地状态
         collectionStates[state.articleId] = state
 
