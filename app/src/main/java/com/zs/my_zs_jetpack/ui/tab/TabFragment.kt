@@ -40,14 +40,22 @@ class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
     private fun initView(tabList: List<ArticleTab>) {
         viewPagerAdapter = MyPagerAdapterBuilder(requireActivity()).apply {
             tabList.forEach {
-                addFragment(
-                    TabItemFragment::class,
-                    Bundle().apply {
-                        //各个fragment传递信息
-                        putInt("type", type)
-                        putInt("tabId", it.id)
-                        putString("name", it.name)
-                    })
+                if (type == 0)
+                    addFragment(
+                        ProjectTabItemFragment::class,
+                        Bundle().apply {
+                            //各个fragment传递信息
+                            putInt("tabId", it.id)
+                            putString("name", it.name)
+                        })
+                else
+                    addFragment(
+                        AccountTabItemFragment::class,
+                        Bundle().apply {
+                            //各个fragment传递信息
+                            putInt("tabId", it.id)
+                            putString("name", it.name)
+                        })
             }
         }.build()
 
