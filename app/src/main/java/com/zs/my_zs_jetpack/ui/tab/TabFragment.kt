@@ -38,31 +38,15 @@ class TabFragment : LazyBaseFragment<FragmentTabBinding>() {
     }
 
     private fun initView(tabList: List<ArticleTab>) {
-//        val fragmentList = arrayListOf<Fragment>().apply {
-//            tabList.forEach {
-//                add(TabItemFragment().apply {
-//                    //想各个fragment传递信息
-//                    val bundle = Bundle()
-//                    bundle.putInt("type", type)
-//                    bundle.putInt("tabId", it.id)
-//                    bundle.putString("name", it.name)
-//                    arguments = bundle
-//                })
-//            }
-//        }
-//        viewPagerAdapter = MyViewPageAdapt(requireActivity(), fragmentList)
-
         viewPagerAdapter = MyPagerAdapterBuilder(requireActivity()).apply {
             tabList.forEach {
                 addFragment(
                     TabItemFragment::class,
                     Bundle().apply {
                         //各个fragment传递信息
-                        val bundle = Bundle()
-                        bundle.putInt("type", type)
-                        bundle.putInt("tabId", it.id)
-                        bundle.putString("name", it.name)
-                        arguments = bundle
+                        putInt("type", type)
+                        putInt("tabId", it.id)
+                        putString("name", it.name)
                     })
             }
         }.build()

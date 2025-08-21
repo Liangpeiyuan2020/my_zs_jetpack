@@ -10,15 +10,34 @@ import com.zs.my_zs_jetpack.Repository.ArticleRepository
 import com.zs.my_zs_jetpack.api.AllDataBean
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
+import com.zs.my_zs_jetpack.api.CollectionState
 import com.zs.my_zs_jetpack.api.RetrofitManage
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.shareIn
 
 class TabItemViewModel : ViewModel() {
+
+    // 记录所有点击过的文章的状态缓存
+    private val stateCache = mutableMapOf<Int, CollectionState>()
+
+    //    // 私有状态流，保存所有文章的状态
+//    private val _collectionStates = MutableStateFlow<Map<Int, CollectionState>>(emptyMap())
+//    // 公开只读状态流
+//    val collectionStates: StateFlow<Map<Int, CollectionState>> = _collectionStates.asStateFlow()
+
+
+
+    // 单事件通知流
+    private val _collectionUpdates = MutableSharedFlow<CollectionState>(extraBufferCapacity = 10)
+    val collectionUpdates: SharedFlow<CollectionState> = _collectionUpdates.asSharedFlow()
+
     private val retrofit = RetrofitManage.getService(ApiServices::class.java)
 
     private val repository = ArticleRepository(retrofit)
@@ -49,5 +68,7 @@ class TabItemViewModel : ViewModel() {
         }
 
     }
+
+
 
 }

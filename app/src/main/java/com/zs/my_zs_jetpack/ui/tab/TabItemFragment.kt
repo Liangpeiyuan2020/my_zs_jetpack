@@ -45,7 +45,7 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
 
         type = arguments?.getInt("type") ?: 0
         tabId = arguments?.getInt("tabId") ?: 0
-        tabItemVm?.loadData(tabId, type)
+        tabItemVm.loadData(tabId, type)
         initView()
         Log.i("TabFragment01", tabId.toString())
     }
@@ -55,7 +55,7 @@ class TabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
         (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.refreshLayout.setOnRefreshListener {
             Log.i("TabFragment1", tabId.toString())
-            tabItemVm?.loadData(tabId, type)
+            tabItemVm.loadData(tabId, type)
             it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
         }
         //上拉加载
