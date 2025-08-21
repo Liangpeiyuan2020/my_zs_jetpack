@@ -37,19 +37,9 @@ class ProjectTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
         tabId = arguments?.getInt("tabId") ?: 0
         projectVm.loadData(tabId)
         initView()
-        Log.i("ProjectTabItemFragment", tabId.toString())
     }
 
     private fun initView() {
-        //关闭更新动画
-        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.refreshLayout.setOnRefreshListener {
-            it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
-        }
-        //上拉加载
-        binding.refreshLayout.setOnLoadMoreListener {
-            it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
-        }
         projectAdapt = TabArticleAdapt(
             { article ->
                 projectVm.handleCollection(article.id, article.collect)
@@ -72,6 +62,16 @@ class ProjectTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
                     projectAdapt.updateAdaptCollectionState(state)
                 }
             }
+        }
+        //关闭更新动画
+        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.refreshLayout.setOnRefreshListener {
+            projectAdapt.refresh()
+            it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+        }
+        //上拉加载
+        binding.refreshLayout.setOnLoadMoreListener {
+            it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
         }
     }
 
