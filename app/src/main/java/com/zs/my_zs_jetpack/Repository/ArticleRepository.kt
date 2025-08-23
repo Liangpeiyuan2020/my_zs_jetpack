@@ -10,6 +10,7 @@ import com.zs.my_zs_jetpack.api.ApiResponse
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.ArticleTab
+import com.zs.my_zs_jetpack.api.BannerBean
 import com.zs.my_zs_jetpack.api.IntegralBean
 import com.zs.my_zs_jetpack.api.NavigationBean
 import com.zs.my_zs_jetpack.api.SystemBean
@@ -93,5 +94,9 @@ class ArticleRepository(val services: ApiServices) {
 
     suspend fun unCollect(id: Int): ApiResponse<Any> {
         return services.unCollect(id)
+    }
+
+    suspend fun getBanner(): List<BannerBean> {
+        return services.getBanner().data
     }
 }

@@ -88,4 +88,9 @@ interface ApiServices {
     @POST("/lg/uncollect_originId/{id}/json")
     suspend fun unCollect(@Path("id") id: Int): ApiResponse<Any>
 
+    /**
+     * banner
+     */
+    @GET("/banner/json")
+    suspend fun getBanner(): ApiResponse<MutableList<BannerBean>>
 }

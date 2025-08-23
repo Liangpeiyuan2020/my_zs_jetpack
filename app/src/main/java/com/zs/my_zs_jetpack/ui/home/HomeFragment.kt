@@ -7,24 +7,31 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.youth.banner.adapter.BannerImageAdapter
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
 import com.zs.my_zs_jetpack.common_base.LazyBaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentHomeBinding
 import com.zs.my_zs_jetpack.api.Article
+import com.zs.my_zs_jetpack.api.BannerBean
+import com.zs.my_zs_jetpack.commonAdapt.MyBannerImageAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
     private val homeVM: HomeViewModel by viewModels<HomeViewModel>()
     private lateinit var articleAdapt: ArticleAdapter
     override fun lazyInit() {
         intiView()
+        homeVM.getBanner()
     }
 
 
     override fun observe() {
-
+        homeVM.bannerList.observe(viewLifecycleOwner) {
+            initBanner(it)
+        }
     }
 
     private fun intiView() {
@@ -68,6 +75,17 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
         observeLoadingState(articleAdapt)
     }
 
+
+    private fun initBanner(bannerList: List<BannerBean>) {
+        binding.banner.apply {
+            isAutoLoop(true)
+            setAdapter(MyBannerImageAdapter(bannerList))
+            addBannerLifecycleObserver(viewLifecycleOwner)
+            setOnBannerListener { item, position ->
+                Log.i("setOnBannerListener", "$item, $position")
+            }
+        }
+    }
 
     override fun getLayoutId(): Int = R.layout.fragment_home
 }
