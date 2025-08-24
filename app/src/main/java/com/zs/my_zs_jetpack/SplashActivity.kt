@@ -23,4 +23,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
+
+    override fun onStop() {
+        timer?.cancel()
+        super.onStop()
+    }
 }

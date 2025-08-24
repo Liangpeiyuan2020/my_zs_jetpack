@@ -18,11 +18,11 @@ class SquareViewModel : BaseModel() {
     private val retrofit = RetrofitManage.getService(ApiServices::class.java)
     val repo = ArticleRepository(retrofit)
 
-    private var _systemList = MutableLiveData<List<SystemBean>?>()
-    val systemList: LiveData<List<SystemBean>?> = _systemList
-
-    private var _navigationList = MutableLiveData<List<NavigationBean>?>()
-    val navigationList: LiveData<List<NavigationBean>?> = _navigationList
+//    private var _systemList = MutableLiveData<List<SystemBean>?>()
+//    val systemList: LiveData<List<SystemBean>?> = _systemList
+//
+//    private var _navigationList = MutableLiveData<List<NavigationBean>?>()
+//    val navigationList: LiveData<List<NavigationBean>?> = _navigationList
 
     private var _itemList = MutableLiveData<List<SquareBaseBean>?>()
     val itemList: LiveData<List<SquareBaseBean>?> = _itemList
@@ -30,7 +30,7 @@ class SquareViewModel : BaseModel() {
     fun getSystemList() {
         viewModelScope.launch {
             val data = callApi { repo.getSystemList() }
-            _systemList.value = data
+//            _systemList.value = data
             Log.i("getSystemList", data?.size.toString())
             data?.let {
 
@@ -47,7 +47,7 @@ class SquareViewModel : BaseModel() {
     fun getNavigationList() {
         viewModelScope.launch {
             val data = callApi { repo.getNavigationList() }
-            _navigationList.value = data
+//            _navigationList.value = data
             Log.i("getSystemList1", data?.size.toString())
             data?.let {
 

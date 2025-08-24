@@ -78,8 +78,9 @@
         <ImageView
             android:id="@+id/ivClear"
             app:layout_constraintBottom_toBottomOf="@+id/etUsername"
-            app:layout_constraintRight_toRightOf="@+id/etUsername"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/etUsername"
+            android:layout_marginRight="@dimen/padding"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ripple_circle_bg"

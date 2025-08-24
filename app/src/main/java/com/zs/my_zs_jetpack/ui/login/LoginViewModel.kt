@@ -22,7 +22,7 @@ class LoginViewModel : BaseModel() {
     val repo = ArticleRepository(retrofit)
     var username = MutableLiveData<String>()
     var password = MutableLiveData<String>()
-    var passIsVisibility = MutableLiveData<Boolean>()
+    var passIsVisibility = MutableLiveData<Boolean>(false)
     var loginRes = MutableLiveData<ApiResponse<UserBean>?>()
 
     fun login() {
