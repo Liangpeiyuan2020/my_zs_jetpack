@@ -11,6 +11,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         getLayoutId().let {
             binding = DataBindingUtil.setContentView(this, it)
+            binding.lifecycleOwner = this
         }
         initViewModal()
         init()

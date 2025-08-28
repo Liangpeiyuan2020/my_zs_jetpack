@@ -40,6 +40,9 @@ class SystemAdapter(val itemList: List<SquareBaseBean>) :
                     child.setBackgroundResource(R.drawable.ripple_tag_bg)
                 }
             }
+//            for(child in binding.labelsView.children){
+//
+//            }
         }
 
     }

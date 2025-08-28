@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -50,6 +51,11 @@ class HomeViewModel : ViewModel() {
         .flatMapLatest {
             repository.getArticleList().cachedIn(viewModelScope)
         }
+
+//    val articles: LiveData<PagingData<Article>> = _refreshTrigger
+//        .flatMapLatest {
+//            repository.getArticleList().cachedIn(viewModelScope)
+//        }.asLiveData()
 
     fun getBanner() {
         viewModelScope.launch {

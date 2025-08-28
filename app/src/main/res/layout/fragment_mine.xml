@@ -11,9 +11,9 @@
     </data>
 
     <LinearLayout
-        android:background="?attr/main_bg_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/main_bg_1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -64,6 +64,7 @@
                 android:background="@drawable/ripple_bg"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:padding="@dimen/padding"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/llRanking"
                 app:layout_constraintTop_toBottomOf="@+id/ivHead">
@@ -81,7 +82,7 @@
                     style="@style/text_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="足迹" />
+                    android:text="足迹足迹足迹足迹足迹足迹足迹足迹足迹足迹足迹" />
             </LinearLayout>
 
             <LinearLayout

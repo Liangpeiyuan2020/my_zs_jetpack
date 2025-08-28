@@ -18,7 +18,9 @@ import com.zs.my_zs_jetpack.api.UserBean
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabArticlePagingSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class ArticleRepository(val services: ApiServices) {
     fun getArticleList(): Flow<PagingData<Article>> {
@@ -28,9 +30,8 @@ class ArticleRepository(val services: ApiServices) {
         ).flow
     }
 
-    suspend fun getArticleTab(): List<ArticleTab> {
-        val dataList = services.getProjectTabList()
-        return dataList.data
+    suspend fun getArticleTab() = withContext(Dispatchers.IO) {
+        services.getProjectTabList().data
     }
 
     fun getProjectArticleList(tableId: Int): Flow<PagingData<AllDataBean>> {
@@ -47,56 +48,49 @@ class ArticleRepository(val services: ApiServices) {
         ).flow
     }
 
-    suspend fun getAccountTab(): List<ArticleTab> {
-        val dataList = services.getAccountTabList()
-        return dataList.data
+    suspend fun getAccountTab() = withContext(Dispatchers.IO) {
+        services.getAccountTabList().data
     }
 
-    suspend fun getSystemList(): List<SystemBean> {
-        val dataList = services.getSystemList()
-        return dataList.data
+    suspend fun getSystemList() = withContext(Dispatchers.IO) {
+        services.getSystemList().data
     }
 
-    suspend fun getNavigationList(): List<NavigationBean> {
-        val dataList = services.getNavigation()
-        return dataList.data
+    suspend fun getNavigationList() = withContext(Dispatchers.IO) {
+        services.getNavigation().data
     }
 
-    suspend fun getInternal(): IntegralBean {
-        val dataList = services.getIntegral()
-        Log.i("LoginFragment", dataList.toString())
-        return dataList.data
+    suspend fun getInternal() = withContext(Dispatchers.IO) {
+        services.getIntegral().data
     }
 
-    suspend fun login(userName: String, userPassword: String): ApiResponse<UserBean> {
-        val dataList = services.login(userName, userPassword)
-        Log.i("LoginFragment", dataList.toString())
-        return dataList
+    suspend fun login(userName: String, userPassword: String) = withContext(Dispatchers.IO) {
+        services.login(userName, userPassword)
+
     }
 
     suspend fun register(
         userName: String,
         userPassword: String,
         rePassword: String
-    ): ApiResponse<Any> {
-        val dataList = services.register(userName, userPassword, rePassword)
-        Log.i("LoginFragment", dataList.toString())
-        return dataList
+    ) = withContext(Dispatchers.IO) {
+        services.register(userName, userPassword, rePassword)
+
     }
 
-    suspend fun logout(): ApiResponse<Any> {
-        return services.logout()
+    suspend fun logout() = withContext(Dispatchers.IO) {
+        services.logout()
     }
 
-    suspend fun collect(id: Int): ApiResponse<Any> {
-        return services.collect(id)
+    suspend fun collect(id: Int) = withContext(Dispatchers.IO) {
+        services.collect(id)
     }
 
-    suspend fun unCollect(id: Int): ApiResponse<Any> {
-        return services.unCollect(id)
+    suspend fun unCollect(id: Int) = withContext(Dispatchers.IO) {
+        services.unCollect(id)
     }
 
-    suspend fun getBanner(): List<BannerBean> {
-        return services.getBanner().data
+    suspend fun getBanner() = withContext(Dispatchers.IO) {
+        services.getBanner().data
     }
 }

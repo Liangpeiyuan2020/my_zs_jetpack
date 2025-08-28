@@ -40,11 +40,9 @@ class ProjectTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     }
 
     private fun initView() {
-        projectAdapt = TabArticleAdapt(
-            { article ->
-                projectVm.handleCollection(article.id, article.collect)
-            }
-        )
+        projectAdapt = TabArticleAdapt { article ->
+            projectVm.handleCollection(article.id, article.collect)
+        }
         binding.recyclerView.adapter = projectAdapt
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         viewLifecycleOwner.lifecycleScope.launch {
