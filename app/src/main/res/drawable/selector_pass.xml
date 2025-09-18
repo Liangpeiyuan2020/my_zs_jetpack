@@ -3,3 +3,4 @@
     <item android:drawable="@drawable/svg_hide_pass" android:state_selected="false" />
     <item android:drawable="@drawable/svg_show_pass" android:state_selected="true" />
 </selector>
+
