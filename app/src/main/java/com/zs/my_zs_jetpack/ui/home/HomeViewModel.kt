@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import com.zs.my_zs_jetpack.api.CollectionState
+import com.zs.my_zs_jetpack.utils.MyToast
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -101,6 +102,7 @@ class HomeViewModel : ViewModel() {
                 if (response.errorCode == 0) {
                     currentState = CollectionState(articleId, false, shouldCollect)
                 } else {
+                    MyToast.toast("请先登录")
                     // 失败时恢复原状态
                     currentState = CollectionState(articleId, false, nowCollectState)
                 }

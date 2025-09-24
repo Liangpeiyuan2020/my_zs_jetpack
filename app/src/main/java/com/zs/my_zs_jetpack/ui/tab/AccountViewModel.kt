@@ -13,6 +13,7 @@ import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.CollectionState
 import com.zs.my_zs_jetpack.api.RetrofitManage
+import com.zs.my_zs_jetpack.utils.MyToast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,6 +79,7 @@ class AccountViewModel : ViewModel() {
                 if (response.errorCode == 0) {
                     currentState = CollectionState(articleId, false, shouldCollect)
                 } else {
+                    MyToast.toast("请先登录")
                     // 失败时恢复原状态
                     currentState = CollectionState(articleId, false, nowCollectState)
                 }
