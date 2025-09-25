@@ -16,11 +16,21 @@ import com.zs.my_zs_jetpack.api.NavigationBean
 import com.zs.my_zs_jetpack.api.SystemBean
 import com.zs.my_zs_jetpack.api.UserBean
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
+import com.zs.my_zs_jetpack.paging.SystemListPagingSource
 import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabArticlePagingSource
 import kotlinx.coroutines.flow.Flow
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 class ArticleRepository(val services: ApiServices) {
+    fun getSystemArticle(tableId: Int): Flow<PagingData<AllDataBean>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, prefetchDistance = 5),
+            pagingSourceFactory = { SystemListPagingSource(services, tableId) }
+        ).flow
+    }
+
     fun getArticleList(): Flow<PagingData<Article>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),

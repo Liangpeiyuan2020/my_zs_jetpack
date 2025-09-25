@@ -1,8 +1,10 @@
 package com.zs.my_zs_jetpack.ui.square
 
+import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.map
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zs.my_zs_jetpack.R
@@ -14,15 +16,22 @@ import com.zs.my_zs_jetpack.databinding.FragmentSystemBinding
 class SystemFragment : LazyBaseFragment<FragmentSystemBinding>() {
     private val systemVm by viewModels<SquareViewModel>()
     private lateinit var systemAdapter: SystemAdapter
-    private var itemList: MutableList<SquareBaseBean> = mutableListOf()
     private var type: Int = 0
 
     override fun observe() {
         super.observe()
         systemVm.itemList.observe(viewLifecycleOwner) {
             Log.i("SystemFragment", it?.size.toString())
-            systemAdapter = SystemAdapter(it!!)
+            systemAdapter = SystemAdapter(it!!) { id, title ->
+                findNavController().navigate(
+                    R.id.action_mainFragment_to_categoryFragment,
+                    Bundle().apply {
+                        putString("title", title)
+                        putInt("tableId", id)
+                    })
+            }
             binding.recyclerView.adapter = systemAdapter
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         }
     }
 
@@ -51,10 +60,6 @@ class SystemFragment : LazyBaseFragment<FragmentSystemBinding>() {
 //        binding.refreshLayout.setOnLoadMoreListener {
 //            it.finishRefresh(1000)
 //        }
-
-        systemAdapter = SystemAdapter(itemList)
-        binding.recyclerView.adapter = systemAdapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
     }
 

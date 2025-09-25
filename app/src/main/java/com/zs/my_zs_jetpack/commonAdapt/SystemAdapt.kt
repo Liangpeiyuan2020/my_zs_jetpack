@@ -1,5 +1,6 @@
 package com.zs.my_zs_jetpack.commonAdapt
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.children
@@ -8,7 +9,7 @@ import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.api.SquareBaseBean
 import com.zs.my_zs_jetpack.databinding.ItemSystemBinding
 
-class SystemAdapter(val itemList: List<SquareBaseBean>) :
+class SystemAdapter(val itemList: List<SquareBaseBean>, val onItemClick: (Int, String) -> Unit) :
     RecyclerView.Adapter<SystemAdapter.SystemViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -36,9 +37,13 @@ class SystemAdapter(val itemList: List<SquareBaseBean>) :
             binding.labelsView.setLabels(systemBean.children)
 //            binding.labelsView.setBackgroundResource(R.drawable.ripple_tag_bg)
             binding.labelsView.apply {
-                for (child in children){
+                for (child in children) {
                     child.setBackgroundResource(R.drawable.ripple_tag_bg)
                 }
+            }
+            binding.labelsView.setOnLabelClickListener { _, _, position ->
+                Log.i("labelsView", systemBean.idList[position].toString())
+                onItemClick(systemBean.idList[position], systemBean.children[position])
             }
 //            for(child in binding.labelsView.children){
 //

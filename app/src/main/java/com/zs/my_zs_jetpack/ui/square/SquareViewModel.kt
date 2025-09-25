@@ -37,7 +37,8 @@ class SquareViewModel : BaseModel() {
                 _itemList.value = it.map { system ->
                     SquareBaseBean(
                         system.name,
-                        system.children.map { child -> child.name }
+                        system.children.map { child -> child.name },
+                        system.children.map { child -> child.id }
                     )
                 }
             }
@@ -54,7 +55,8 @@ class SquareViewModel : BaseModel() {
                 _itemList.value = it.map { nav ->
                     SquareBaseBean(
                         nav.name,
-                        nav.articles.map { article -> article.title }
+                        nav.articles.map { article -> article.title },
+                        nav.articles.map { article -> article.id }
                     )
                 }
             }

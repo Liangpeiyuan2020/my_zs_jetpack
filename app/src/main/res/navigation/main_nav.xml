@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_mainFragment_to_webFragment"
             app:destination="@id/webFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -44,6 +47,10 @@
         android:id="@+id/webFragment"
         android:name="com.zs.my_zs_jetpack.ui.webDetails.WebFragment"
         android:label="WebFragment" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.zs.my_zs_jetpack.ui.category.CategoryFragment"
+        android:label="CategoryFragment" />
 
 
 </navigation>

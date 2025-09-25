@@ -74,13 +74,13 @@ interface ApiServices {
     ): ApiResponse<Any>
 
     @GET("/user/logout/json")
-    suspend fun logout():ApiResponse<Any>
+    suspend fun logout(): ApiResponse<Any>
 
     /**
      * 收藏
      */
     @POST("/lg/collect/{id}/json")
-    suspend fun collect(@Path("id")id:Int):ApiResponse<Any>
+    suspend fun collect(@Path("id") id: Int): ApiResponse<Any>
 
     /**
      * 取消收藏
@@ -93,4 +93,12 @@ interface ApiServices {
      */
     @GET("/banner/json")
     suspend fun getBanner(): ApiResponse<MutableList<BannerBean>>
+
+
+    /**
+     * 获取体系文章列表
+     */
+    @GET("/article/list/{pageNum}/json")
+    suspend fun getSystemArticle(@Path("pageNum") pageNum: Int, @Query("cid") cid: Int)
+            : ApiResponse<ArticlePage<AllDataBean>>
 }
