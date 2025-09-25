@@ -19,9 +19,10 @@ class CategoryViewModel : BaseModel() {
     private val repo = ArticleRepository(retrofit)
 
     private var _articleTableId = MutableStateFlow<Int>(0)
-    private var _articles = _articleTableId.flatMapLatest { query ->
-        repo.getSystemArticle(query).cachedIn(viewModelScope)
-    }.shareIn(viewModelScope, SharingStarted.Lazily)
+    var _articles = _articleTableId
+        .flatMapLatest { query ->
+            repo.getSystemArticle(query).cachedIn(viewModelScope)
+        }.shareIn(viewModelScope, SharingStarted.Lazily)
 
     val articles get() = _articles
 
