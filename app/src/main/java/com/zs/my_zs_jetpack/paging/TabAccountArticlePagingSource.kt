@@ -20,7 +20,7 @@ class TabAccountArticlePagingSource(val service: ApiServices, val tableId: Int) 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: 0
             val response: ApiResponse<ArticlePage<Article>> = service.getAccountList(tableId, page)
 
             LoadResult.Page(
