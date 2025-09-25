@@ -1,12 +1,14 @@
 package com.zs.my_zs_jetpack.ui.tab
 
 
+import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zs.my_zs_jetpack.R
@@ -40,6 +42,13 @@ class AccountTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
         accountAdapt = ArticleAdapter(
             onCollectClick = { article ->
                 accountVm.handleCollection(article.id, article.collect)
+            },
+            onItemClick = {
+                val bundle = Bundle().apply {
+                    putString("title", it.title)
+                    putString("loadUrl", it.link)
+                }
+                findNavController().navigate(R.id.action_mainFragment_to_webFragment, bundle)
             }
         )
         binding.recyclerView.adapter = accountAdapt

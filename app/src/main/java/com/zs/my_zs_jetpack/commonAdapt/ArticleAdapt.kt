@@ -11,7 +11,10 @@ import com.zs.my_zs_jetpack.extension.clickNoRepeat
 import com.zs.my_zs_jetpack.api.CollectionState
 
 // ArticleAdapter.kt
-class ArticleAdapter(private val onCollectClick: (Article) -> Unit) :
+class ArticleAdapter(
+    private val onCollectClick: (Article) -> Unit,
+    private val onItemClick: (Article) -> Unit
+) :
     PagingDataAdapter<Article, ArticleAdapter.ArticleViewHolder>(Article_COMPARATOR) {
 
     // 监听状态变化的关键类
@@ -30,7 +33,7 @@ class ArticleAdapter(private val onCollectClick: (Article) -> Unit) :
     inner class ArticleViewHolder(private val binding: ItemHomeArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(article: Article, state: CollectionState, onClick: (Article) -> Unit) {
+        fun bind(article: Article, state: CollectionState) {
             val displayArticle = article.copy(
                 collect = state.isCollected
             )
@@ -40,8 +43,11 @@ class ArticleAdapter(private val onCollectClick: (Article) -> Unit) :
             binding.isCollecting = state.isCollecting
             binding.ivCollect.clickNoRepeat {
                 if (!state.isCollecting) {
-                    onClick(article)
+                    onCollectClick(article)
                 }
+            }
+            binding.root.clickNoRepeat {
+                onItemClick(article)
             }
             binding.executePendingBindings()
         }
@@ -58,7 +64,7 @@ class ArticleAdapter(private val onCollectClick: (Article) -> Unit) :
         getItem(position)?.let { article ->
             val currentState =
                 collectionStates[article.id] ?: CollectionState(article.id, false, article.collect)
-            holder.bind(article, currentState, onCollectClick)
+            holder.bind(article, currentState)
         }
     }
 

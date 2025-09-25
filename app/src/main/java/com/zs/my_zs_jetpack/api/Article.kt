@@ -9,5 +9,6 @@ data class Article(
     @SerializedName("niceDate") var date: String,
     var title: String,
     @SerializedName("superChapterName") var articleTag: String,
-    var collect: Boolean
+    var collect: Boolean,
+    var link: String
 )

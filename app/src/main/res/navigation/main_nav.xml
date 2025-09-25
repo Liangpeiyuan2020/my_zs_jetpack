@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_webFragment"
+            app:destination="@id/webFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -37,6 +40,10 @@
         android:id="@+id/settingsFragment"
         android:name="com.zs.my_zs_jetpack.ui.setting.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/webFragment"
+        android:name="com.zs.my_zs_jetpack.ui.webDetails.WebFragment"
+        android:label="WebFragment" />
 
 
 </navigation>
