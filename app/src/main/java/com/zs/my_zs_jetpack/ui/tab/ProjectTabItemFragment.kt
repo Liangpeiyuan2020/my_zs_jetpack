@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zs.my_zs_jetpack.R
@@ -40,9 +41,19 @@ class ProjectTabItemFragment : LazyBaseFragment<FragmentTabItemBinding>() {
     }
 
     private fun initView() {
-        projectAdapt = TabArticleAdapt { article ->
-            projectVm.handleCollection(article.id, article.collect)
-        }
+        projectAdapt = TabArticleAdapt(
+            onCollectClick = { article ->
+                projectVm.handleCollection(article.id, article.collect)
+            },
+            onItemClick = {
+                findNavController().navigate(
+                    R.id.action_mainFragment_to_webFragment,
+                    Bundle().apply {
+                        putString("title", it.title)
+                        putString("loadUrl", it.link)
+                    })
+            }
+        )
         binding.recyclerView.adapter = projectAdapt
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         viewLifecycleOwner.lifecycleScope.launch {

@@ -12,7 +12,10 @@ import com.zs.my_zs_jetpack.databinding.ItemHomeArticleBinding
 import com.zs.my_zs_jetpack.databinding.ItemTabArticleBinding
 import com.zs.my_zs_jetpack.extension.clickNoRepeat
 
-class TabArticleAdapt(private val onCollectClick: (AllDataBean) -> Unit) :
+class TabArticleAdapt(
+    private val onCollectClick: (AllDataBean) -> Unit,
+    private val onItemClick: (AllDataBean) -> Unit
+) :
     PagingDataAdapter<AllDataBean, TabArticleAdapt.TabArticleViewHolder>(Article_COMPARATOR) {
     val collectionStates = mutableMapOf<Int, CollectionState>()
 
@@ -29,13 +32,16 @@ class TabArticleAdapt(private val onCollectClick: (AllDataBean) -> Unit) :
     inner class TabArticleViewHolder(private val binding: ItemTabArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(dataBean: AllDataBean, state: CollectionState, onClick: (AllDataBean) -> Unit) {
+        fun bind(dataBean: AllDataBean, state: CollectionState) {
             val newDateBean = dataBean.copy(collect = state.isCollected)
             binding.dataBean = newDateBean
             binding.ivCollect.clickNoRepeat {
                 if (!state.isCollecting) {
-                    onClick(newDateBean)
+                    onCollectClick(newDateBean)
                 }
+            }
+            binding.root.clickNoRepeat {
+                onItemClick(newDateBean)
             }
             binding.executePendingBindings()
         }
@@ -52,7 +58,7 @@ class TabArticleAdapt(private val onCollectClick: (AllDataBean) -> Unit) :
         getItem(position)?.let { article ->
             val currentState =
                 collectionStates[article.id] ?: CollectionState(article.id, false, article.collect)
-            holder.bind(article, currentState, onCollectClick)
+            holder.bind(article, currentState)
         }
     }
 
