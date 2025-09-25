@@ -11,11 +11,13 @@ import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.ArticleTab
 import com.zs.my_zs_jetpack.api.BannerBean
+import com.zs.my_zs_jetpack.api.Collect
 import com.zs.my_zs_jetpack.api.IntegralBean
 import com.zs.my_zs_jetpack.api.NavigationBean
 import com.zs.my_zs_jetpack.api.SystemBean
 import com.zs.my_zs_jetpack.api.UserBean
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
+import com.zs.my_zs_jetpack.paging.CollectArticlePagingSource
 import com.zs.my_zs_jetpack.paging.SystemListPagingSource
 import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabArticlePagingSource
@@ -24,6 +26,13 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 class ArticleRepository(val services: ApiServices) {
+    fun getCollectArticle(): Flow<PagingData<Article>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, prefetchDistance = 5),
+            pagingSourceFactory = { CollectArticlePagingSource(services) }
+        ).flow
+    }
+
     fun getSystemArticle(tableId: Int): Flow<PagingData<Article>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),

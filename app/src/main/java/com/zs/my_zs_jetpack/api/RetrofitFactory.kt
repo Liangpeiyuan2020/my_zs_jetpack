@@ -34,6 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
+
 object RetrofitFactory {
     private val BASE_URL: String = "https://www.wanandroid.com"
     private val okHttpClientBuilder: OkHttpClient.Builder
@@ -67,7 +68,7 @@ object RetrofitFactory {
     private fun getLogInterceptor(): Interceptor {
         //http log 拦截器
         return HttpLoggingInterceptor("OkHttp").apply {
-            setPrintLevel(HttpLoggingInterceptor.Level.BASIC)
+            setPrintLevel(HttpLoggingInterceptor.Level.BODY)
             setColorLevel(Level.INFO)
         }
     }

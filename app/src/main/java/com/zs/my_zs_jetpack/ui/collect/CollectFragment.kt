@@ -1,4 +1,4 @@
-package com.zs.my_zs_jetpack.ui.category
+package com.zs.my_zs_jetpack.ui.collect
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
@@ -10,25 +10,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
 import com.zs.my_zs_jetpack.common_base.BaseFragment
-import com.zs.my_zs_jetpack.databinding.FragmentCategoryBinding
+import com.zs.my_zs_jetpack.databinding.FragmentCollectBinding
 import com.zs.my_zs_jetpack.extension.clickNoRepeat
 import kotlinx.coroutines.launch
 
-class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
-
-    private val categoryVm: CategoryViewModel by viewModels()
-    private lateinit var categoryAdapt: ArticleAdapter
-    private var tableId: Int = 0
+class CollectFragment : BaseFragment<FragmentCollectBinding>() {
+    //    private val title by lazy { arguments?.getString("title") }
+    private val collectVm by viewModels<CollectViewModel>()
     private lateinit var title: String
+    private lateinit var collectAdapter: ArticleAdapter
 
     override fun init() {
         super.init()
-        tableId = arguments?.getInt("tableId") ?: 0
         title = arguments?.getString("title").toString()
         initView()
-        loadData()
     }
-
     override fun onclick() {
         super.onclick()
         binding.ivBack.clickNoRepeat {
@@ -36,16 +32,11 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
         }
     }
 
-    private fun loadData() {
-        categoryVm.loadData(tableId)
-    }
-
-
     private fun initView() {
         binding.tvTitle.text = title
-        categoryAdapt = ArticleAdapter(
+        collectAdapter = ArticleAdapter(
             onCollectClick = { article ->
-                categoryVm.handleCollection(article.id, article.collect)
+                collectVm.handleCollection(article.id, article.collect)
             },
             onItemClick = {
                 findNavController().navigate(
@@ -56,9 +47,9 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
                     })
             }
         )
-        binding.recyclerView.adapter = categoryAdapt
+        binding.recyclerView.adapter = collectAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        observeLoadingState(categoryAdapt)
+        observeLoadingState(collectAdapter)
     }
 
     override fun observe() {
@@ -66,13 +57,13 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    categoryVm.articles.collect {
-                        categoryAdapt.submitData(it)
+                    collectVm.collect.collect {
+                        collectAdapter.submitData(it)
                     }
                 }
                 launch {
-                    categoryVm.collectionUpdates.collect {
-                        categoryAdapt.updateAdaptCollectionState(it)
+                    collectVm.collectionUpdates.collect {
+                        collectAdapter.updateAdaptCollectionState(it)
                     }
                 }
             }
@@ -80,5 +71,17 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
 
     }
 
-    override fun getLayoutId() = R.layout.fragment_category
+    override fun getLayoutId() = R.layout.fragment_collect
+
+//    override fun observe() {
+//        super.observe()
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                collectVm.collect.collect {
+//
+//                }
+//            }
+//        }
+//    }
+
 }

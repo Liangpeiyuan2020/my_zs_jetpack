@@ -101,4 +101,10 @@ interface ApiServices {
     @GET("/article/list/{pageNum}/json")
     suspend fun getSystemArticle(@Path("pageNum") pageNum: Int, @Query("cid") cid: Int)
             : ApiResponse<ArticlePage<Article>>
+
+    /**
+     * 我的收藏列表
+     */
+    @GET("/lg/collect/list/{pageNum}/json")
+    suspend fun getCollectList(@Path("pageNum") pageNum: Int): ApiResponse<ArticlePage<Collect>>
 }

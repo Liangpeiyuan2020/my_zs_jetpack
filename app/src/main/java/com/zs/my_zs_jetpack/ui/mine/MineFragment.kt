@@ -54,6 +54,9 @@ class MineFragment : LazyBaseFragment<FragmentMineBinding>() {
                 options
             )
         }
+        binding.clCollect.clickNoRepeat {
+            findNavController().navigate(R.id.action_mainFragment_to_categoryFragment, Bundle().apply { putString("title", "我的收藏") })
+        }
 
     }
 
