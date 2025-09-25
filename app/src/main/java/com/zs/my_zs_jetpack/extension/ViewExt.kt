@@ -15,6 +15,7 @@ fun View.clickNoRepeat(interval: Long = 400, onClick: (View) -> Unit) {
         onClick(it)
     }
 }
+
 fun Collect.toArticle(): Article {
     return Article(
         id = this.id,
@@ -22,7 +23,7 @@ fun Collect.toArticle(): Article {
         date = this.date,
         title = this.title,
         articleTag = this.articleTag,  // 注意：Collect 用的是 `chapterName`，Article 用的是 `superChapterName`
-        collect = this.collect,
+        collect = true,
         link = this.link
     )
 }

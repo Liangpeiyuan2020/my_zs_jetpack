@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_mainFragment_to_categoryFragment"
             app:destination="@id/categoryFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_collectFragment"
+            app:destination="@id/collectFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -51,6 +54,10 @@
         android:id="@+id/categoryFragment"
         android:name="com.zs.my_zs_jetpack.ui.category.CategoryFragment"
         android:label="CategoryFragment" />
+    <fragment
+        android:id="@+id/collectFragment"
+        android:name="com.zs.my_zs_jetpack.ui.collect.CollectFragment"
+        android:label="CollectFragment" />
 
 
 </navigation>
