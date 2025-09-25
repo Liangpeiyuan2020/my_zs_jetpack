@@ -8,6 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zs.my_zs_jetpack.R
+import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
 import com.zs.my_zs_jetpack.commonAdapt.TabArticleAdapt
 import com.zs.my_zs_jetpack.common_base.BaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentCategoryBinding
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
 
     private val categoryVm: CategoryViewModel by viewModels()
-    private lateinit var categoryAdapt: TabArticleAdapt
+    private lateinit var categoryAdapt: ArticleAdapter
     private var tableId: Int = 0
     private lateinit var title: String
 
@@ -43,9 +44,9 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
 
     private fun initView() {
         binding.tvTitle.text = title
-        categoryAdapt = TabArticleAdapt(
+        categoryAdapt = ArticleAdapter(
             onCollectClick = { article ->
-//                projectVm.handleCollection(article.id, article.collect)
+                categoryVm.handleCollection(article.id, article.collect)
             },
             onItemClick = {
                 findNavController().navigate(
@@ -58,17 +59,26 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
         )
         binding.recyclerView.adapter = categoryAdapt
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        observeLoadingState(categoryAdapt)
     }
 
     override fun observe() {
         super.observe()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                categoryVm.articles.collect {
-                    categoryAdapt.submitData(it)
+                launch {
+                    categoryVm.articles.collect {
+                        categoryAdapt.submitData(it)
+                    }
+                }
+                launch {
+                    categoryVm.collectionUpdates.collect {
+                        categoryAdapt.updateAdaptCollectionState(it)
+                    }
                 }
             }
         }
+
     }
 
     override fun getLayoutId() = R.layout.fragment_category

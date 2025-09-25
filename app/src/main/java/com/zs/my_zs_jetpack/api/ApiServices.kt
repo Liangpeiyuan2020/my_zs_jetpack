@@ -100,5 +100,5 @@ interface ApiServices {
      */
     @GET("/article/list/{pageNum}/json")
     suspend fun getSystemArticle(@Path("pageNum") pageNum: Int, @Query("cid") cid: Int)
-            : ApiResponse<ArticlePage<AllDataBean>>
+            : ApiResponse<ArticlePage<Article>>
 }

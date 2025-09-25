@@ -37,6 +37,8 @@ class ArticleAdapter(
             val displayArticle = article.copy(
                 collect = state.isCollected
             )
+            if (displayArticle.author.isEmpty() || displayArticle.author.isBlank())
+                displayArticle.author = "鸿洋"
 
             binding.dataBean = displayArticle
 

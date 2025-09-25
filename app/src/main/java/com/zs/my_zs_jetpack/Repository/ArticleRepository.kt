@@ -24,7 +24,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 class ArticleRepository(val services: ApiServices) {
-    fun getSystemArticle(tableId: Int): Flow<PagingData<AllDataBean>> {
+    fun getSystemArticle(tableId: Int): Flow<PagingData<Article>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),
             pagingSourceFactory = { SystemListPagingSource(services, tableId) }
