@@ -57,7 +57,11 @@
     <fragment
         android:id="@+id/collectFragment"
         android:name="com.zs.my_zs_jetpack.ui.collect.CollectFragment"
-        android:label="CollectFragment" />
+        android:label="CollectFragment" >
+        <action
+            android:id="@+id/action_collectFragment_to_webFragment"
+            app:destination="@id/webFragment" />
+    </fragment>
 
 
 </navigation>

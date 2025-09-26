@@ -3,7 +3,7 @@ package com.zs.my_zs_jetpack.api
 import com.google.gson.annotations.SerializedName
 
 data class Collect(
-    var id: Int,
+    @SerializedName("originId") var id: Int,
 //    var topTitle: String,
     var author: String,
     @SerializedName("niceDate") var date: String,

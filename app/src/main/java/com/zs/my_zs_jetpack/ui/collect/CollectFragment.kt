@@ -40,7 +40,7 @@ class CollectFragment : BaseFragment<FragmentCollectBinding>() {
             },
             onItemClick = {
                 findNavController().navigate(
-                    R.id.action_mainFragment_to_webFragment,
+                    R.id.action_collectFragment_to_webFragment,
                     Bundle().apply {
                         putString("title", it.title)
                         putString("loadUrl", it.link)

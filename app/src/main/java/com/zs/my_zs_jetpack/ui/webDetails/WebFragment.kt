@@ -24,8 +24,19 @@ class WebFragment : BaseFragment<FragmentWebBinding>() {
         super.init()
         binding.vm = webVM
         loadUrl = arguments?.getString("loadUrl").toString()
+        loadUrl = convertToHttps(loadUrl)
         title = arguments?.getString("title").toString()
         initWebView()
+    }
+
+    fun convertToHttps(url: String): String {
+        return when {
+            url.startsWith("https://") -> url // 已经是 HTTPS
+            url.startsWith("http://") -> "https://" + url.substring(7) // 替换 HTTP
+            url.startsWith("//") -> "https:$url" // 处理无协议头的情况
+            !url.contains("://") -> "https://$url" // 处理无协议的情况
+            else -> url // 其他协议（如 ftp://）保持不变
+        }
     }
 
     override fun onclick() {
@@ -46,11 +57,11 @@ class WebFragment : BaseFragment<FragmentWebBinding>() {
     private fun initWebView() {
         binding.tvTitle.text = title
 
-//        val webSettings: WebSettings = binding.webView.settings
-//        webSettings.javaScriptEnabled = true
-//        //自适应屏幕
-//        binding.webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
-//        binding.webView.settings.loadWithOverviewMode = true
+        val webSettings: WebSettings = binding.webView.settings
+        webSettings.javaScriptEnabled = true
+        //自适应屏幕
+        binding.webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
+        binding.webView.settings.loadWithOverviewMode = true
 
         //如果不设置WebViewClient，请求会跳转系统浏览器
         binding.webView.webViewClient = object : WebViewClient() {
