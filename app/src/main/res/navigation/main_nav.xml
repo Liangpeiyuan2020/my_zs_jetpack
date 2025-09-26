@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_mainFragment_to_collectFragment"
             app:destination="@id/collectFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -60,6 +63,14 @@
         android:label="CollectFragment" >
         <action
             android:id="@+id/action_collectFragment_to_webFragment"
+            app:destination="@id/webFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.zs.my_zs_jetpack.ui.search.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_webFragment"
             app:destination="@id/webFragment" />
     </fragment>
 

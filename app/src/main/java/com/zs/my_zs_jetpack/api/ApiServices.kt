@@ -107,4 +107,16 @@ interface ApiServices {
      */
     @GET("/lg/collect/list/{pageNum}/json")
     suspend fun getCollectList(@Path("pageNum") pageNum: Int): ApiResponse<ArticlePage<Collect>>
+
+
+    /**
+     * 搜索
+     */
+    @POST("/article/query/{pageNum}/json")
+    suspend fun search(
+        @Path("pageNum") pageNum: Int,
+        @Query("k") k: String
+    ): ApiResponse<ArticlePage<Article>>
+
+
 }

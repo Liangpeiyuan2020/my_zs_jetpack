@@ -18,6 +18,7 @@ import com.zs.my_zs_jetpack.api.SystemBean
 import com.zs.my_zs_jetpack.api.UserBean
 import com.zs.my_zs_jetpack.paging.ArticlePagingSource
 import com.zs.my_zs_jetpack.paging.CollectArticlePagingSource
+import com.zs.my_zs_jetpack.paging.SearchPagingSource
 import com.zs.my_zs_jetpack.paging.SystemListPagingSource
 import com.zs.my_zs_jetpack.paging.TabAccountArticlePagingSource
 import com.zs.my_zs_jetpack.paging.TabArticlePagingSource
@@ -26,6 +27,13 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 class ArticleRepository(val services: ApiServices) {
+    fun search(keyWords: String): Flow<PagingData<Article>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, prefetchDistance = 5),
+            pagingSourceFactory = { SearchPagingSource(services, keyWords) }
+        ).flow
+    }
+
     fun getCollectArticle(): Flow<PagingData<Article>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),

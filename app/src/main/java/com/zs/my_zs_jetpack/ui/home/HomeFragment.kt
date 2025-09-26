@@ -17,6 +17,7 @@ import com.zs.my_zs_jetpack.databinding.FragmentHomeBinding
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.BannerBean
 import com.zs.my_zs_jetpack.commonAdapt.MyBannerImageAdapter
+import com.zs.my_zs_jetpack.extension.clickNoRepeat
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -33,6 +34,13 @@ class HomeFragment : LazyBaseFragment<FragmentHomeBinding>() {
     override fun observe() {
         homeVM.bannerList.observe(viewLifecycleOwner) {
             initBanner(it)
+        }
+    }
+
+    override fun onclick() {
+        super.onclick()
+        binding.clSearch.clickNoRepeat {
+            findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
         }
     }
 
