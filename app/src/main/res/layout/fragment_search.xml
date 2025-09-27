@@ -17,10 +17,13 @@
         android:elevation="6dp"
         android:fitsSystemWindows="true"
         tools:context=".ui.search.SearchFragment">
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/collapsingToolBarLayout"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/search_background"
+            android:padding="1dp"
             android:scaleX="0.8"
             android:scaleY="0.8"
             app:contentInsetStart="0dp"
@@ -31,20 +34,18 @@
                 android:id="@+id/searchBarProduct"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/search_background"
                 android:iconifiedByDefault="false"
                 android:queryHint="根据关键字搜索" />
         </com.google.android.material.appbar.MaterialToolbar>
-        <androidx.recyclerview.widget.RecyclerView
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/collapsingToolBarLayout"
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/collapsingToolBarLayout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
