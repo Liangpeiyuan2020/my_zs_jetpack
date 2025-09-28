@@ -1,21 +1,17 @@
 package com.zs.my_zs_jetpack.ui.search
 
-import androidx.fragment.app.viewModels
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zs.my_zs_jetpack.R
-import com.zs.my_zs_jetpack.api.Article
-import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
 import com.zs.my_zs_jetpack.commonAdapt.CommonArticleAdapt
 import com.zs.my_zs_jetpack.common_base.BaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentSearchBinding
@@ -64,12 +60,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     private fun initSearchBar() {
         binding.searchBarProduct.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
                 if (query != null && query.length != 0) {
+                    closeKeyboard(binding.searchBarProduct, requireActivity())
+                    searchAdapter.submitList(emptyList())
                     searchVm.search1(query)
-                } else {
-                    Log.i("home2", query ?: "not")
-
                 }
                 return true
             }
@@ -84,20 +78,24 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     override fun observe() {
         super.observe()
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                searchVm.articles.collect {
-//                    searchAdapter.submitData(it)
-//                }
-//            }
-//        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                searchVm.collectionUpdates.collect {
+                    searchAdapter.updateAdaptCollectionState(it)
+                }
+            }
+        }
 
         searchVm.articles1.observe(viewLifecycleOwner) {
-            searchAdapter.submitData(it)
+            searchAdapter.submitList(it)
         }
+
     }
-
-
+    fun closeKeyboard(mEditText: SearchView, mContext: Context) {
+        val imm =
+            mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(mEditText.windowToken, 0)
+    }
     override fun getLayoutId() = R.layout.fragment_search
 
 

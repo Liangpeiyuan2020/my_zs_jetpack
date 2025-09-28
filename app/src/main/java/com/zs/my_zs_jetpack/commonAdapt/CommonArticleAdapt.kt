@@ -2,6 +2,8 @@ package com.zs.my_zs_jetpack.commonAdapt
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.api.CollectionState
@@ -11,11 +13,31 @@ import com.zs.my_zs_jetpack.extension.clickNoRepeat
 class CommonArticleAdapt(
     private val onCollectClick: (Article) -> Unit,
     private val onItemClick: (Article) -> Unit
-) : RecyclerView.Adapter<CommonArticleAdapt.CommonArticleViewHolder>() {
-    var articles: MutableList<Article> = mutableListOf()
+) : ListAdapter<Article, CommonArticleAdapt.CommonArticleViewHolder>(Article_COMPARATOR) {
+    companion object {
+        private val Article_COMPARATOR = object : DiffUtil.ItemCallback<Article>() {
+            override fun areItemsTheSame(
+                oldItem: Article,
+                newItem: Article
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: Article,
+                newItem: Article
+            ): Boolean {
+                //只有点赞和时间可能存在改变
+                return oldItem.collect == newItem.collect
+                        && oldItem.date == newItem.date
+            }
+        }
+    }
+
 
     // 监听状态变化的关键类
     private val collectionStates = mutableMapOf<Int, CollectionState>()
+    private var positionIndex = 0
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -30,13 +52,12 @@ class CommonArticleAdapt(
         holder: CommonArticleViewHolder,
         position: Int
     ) {
-        val article = articles[position]
+        val article = getItem(position)
         val currentState =
             collectionStates[article.id] ?: CollectionState(article.id, false, article.collect)
         holder.bind(article, currentState, position)
     }
 
-    override fun getItemCount() = articles.size
 
     inner class CommonArticleViewHolder(val binding: ItemHomeArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -52,8 +73,9 @@ class CommonArticleAdapt(
             binding.isCollecting = state.isCollecting
             binding.ivCollect.clickNoRepeat {
                 if (!state.isCollecting) {
+                    positionIndex = position
                     onCollectClick(article)
-                    notifyItemChanged(position)
+
                 }
             }
             binding.root.clickNoRepeat {
@@ -66,13 +88,20 @@ class CommonArticleAdapt(
     fun updateAdaptCollectionState(state: CollectionState) {
         // 1. 更新本地状态
         collectionStates[state.articleId] = state
+        notifyItemChanged(positionIndex)
     }
 
-    fun submitData(list: MutableList<Article>) {
-//        val oldSize = articles.size
-//        articles.addAll(list)
-//        notifyItemRangeInserted(oldSize, list.size)
-        articles = list
-        notifyDataSetChanged()
+    /**
+     * 重新加载数据时必须换一个list集合，否则diff不生效
+     */
+    override fun submitList(list: List<Article>?) {
+        super.submitList(
+            if (list == null) mutableListOf() else
+                mutableListOf<Article>().apply {
+                    addAll(
+                        list
+                    )
+                })
     }
+
 }

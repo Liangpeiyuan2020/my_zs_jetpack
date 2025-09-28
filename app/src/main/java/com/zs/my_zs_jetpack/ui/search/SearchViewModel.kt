@@ -1,11 +1,8 @@
 package com.zs.my_zs_jetpack.ui.search
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.zs.my_zs_jetpack.Repository.ArticleRepository
 import com.zs.my_zs_jetpack.api.ApiServices
 import com.zs.my_zs_jetpack.api.Article
@@ -13,63 +10,47 @@ import com.zs.my_zs_jetpack.api.CollectionState
 import com.zs.my_zs_jetpack.api.RetrofitManage
 import com.zs.my_zs_jetpack.common_base.BaseModel
 import com.zs.my_zs_jetpack.utils.MyToast
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class SearchViewModel : BaseModel() {
     val retrofit = RetrofitManage.getService(ApiServices::class.java)
     val repo = ArticleRepository(retrofit)
 
-    private val _keywords = MutableStateFlow<String>("")
-    val articles: Flow<PagingData<Article>> = _keywords
-        .flatMapLatest { query ->
-            Log.i("home21", _keywords.value ?: "not")
-            if (query.isBlank()) emptyFlow()
-            else repo.search(query).cachedIn(viewModelScope)
-
-        }.shareIn(viewModelScope, SharingStarted.Lazily) // 状态流共享
-
-    fun search(keyWords: String) {
-        if (keyWords != _keywords.value) {
-            _keywords.value = keyWords
-            Log.i("home2", _keywords.value ?: "not")
-        }
-
-    }
-
     private var _pagerNum = 0
     private var _keyWords = ""
     private var _articles1 = MutableLiveData<MutableList<Article>>()
-    val articles1 get() = _articles1
+    val articles1: LiveData<MutableList<Article>> = _articles1
 
     fun search1(keyWords: String) {
         viewModelScope.launch {
             _pagerNum = 0
             _keyWords = keyWords
-            _articles1.value = callApi { repo.search1(_pagerNum, _keyWords) }!!
+            _articles1.value = callApi { repo.search1(_pagerNum, _keyWords) } ?: mutableListOf()
         }
     }
 
     fun loadMore() {
         viewModelScope.launch {
             _pagerNum += 1
-            val list = callApi { repo.search1(_pagerNum, _keyWords) }!!
-            _articles1.value?.addAll(list)
+            val list = repo.search1(_pagerNum, _keyWords)
+            if (list.isNotEmpty()) {
+                // 创建新列表并设置value
+                val newList = (_articles1.value ?: mutableListOf()).apply {
+                    addAll(list)
+                }
+
+                _articles1.value = newList
+            }
         }
     }
 
     fun refresh() {
         viewModelScope.launch {
             _pagerNum = 0
-            _articles1.value = callApi { repo.search1(_pagerNum, _keyWords) }!!
+            _articles1.value = callApi { repo.search1(_pagerNum, _keyWords) } ?: mutableListOf()
         }
     }
 
