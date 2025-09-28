@@ -14,7 +14,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zs.my_zs_jetpack.R
+import com.zs.my_zs_jetpack.api.Article
 import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
+import com.zs.my_zs_jetpack.commonAdapt.CommonArticleAdapt
 import com.zs.my_zs_jetpack.common_base.BaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentSearchBinding
 import kotlinx.coroutines.launch
@@ -22,7 +24,7 @@ import kotlinx.coroutines.launch
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     private val searchVm: SearchViewModel by viewModels()
-    private lateinit var searchAdapter: ArticleAdapter
+    private lateinit var searchAdapter: CommonArticleAdapt
     override fun init() {
         super.init()
         initSearchBar()
@@ -30,7 +32,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     }
 
     private fun initRecyclerView() {
-        searchAdapter = ArticleAdapter(
+        searchAdapter = CommonArticleAdapt(
             onCollectClick = { article ->
                 searchVm.handleCollection(article.id, article.collect)
             },
@@ -45,7 +47,18 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         )
         binding.recyclerView.adapter = searchAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        observeLoadingState(searchAdapter)
+
+
+        binding.refreshLayout.setOnRefreshListener {
+            searchVm.refresh()
+            searchVm.clearStateCache()
+            it.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+        }
+        //上拉加载
+        binding.refreshLayout.setOnLoadMoreListener {
+            searchVm.loadMore()
+            it.finishLoadMore(2000/*,false*/);//传入false表示加载失败
+        }
     }
 
     private fun initSearchBar() {
@@ -53,7 +66,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 if (query != null && query.length != 0) {
-                    searchVm.search(query)
+                    searchVm.search1(query)
                 } else {
                     Log.i("home2", query ?: "not")
 
@@ -71,12 +84,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     override fun observe() {
         super.observe()
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                searchVm.articles.collect {
-                    searchAdapter.submitData(it)
-                }
-            }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                searchVm.articles.collect {
+//                    searchAdapter.submitData(it)
+//                }
+//            }
+//        }
+
+        searchVm.articles1.observe(viewLifecycleOwner) {
+            searchAdapter.submitData(it)
         }
     }
 

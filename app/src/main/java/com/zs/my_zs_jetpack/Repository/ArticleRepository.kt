@@ -34,6 +34,10 @@ class ArticleRepository(val services: ApiServices) {
         ).flow
     }
 
+    suspend fun search1(pageNum: Int, keyWords: String): MutableList<Article> {
+        return services.search(pageNum, keyWords).data.datas
+    }
+
     fun getCollectArticle(): Flow<PagingData<Article>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),

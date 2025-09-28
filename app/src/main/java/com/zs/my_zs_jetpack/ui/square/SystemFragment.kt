@@ -31,6 +31,7 @@ class SystemFragment : LazyBaseFragment<FragmentSystemBinding>() {
                     })
             }
             binding.recyclerView.adapter = systemAdapter
+            systemAdapter
             binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         }
     }
