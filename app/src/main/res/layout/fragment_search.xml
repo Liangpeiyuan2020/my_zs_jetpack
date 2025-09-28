@@ -18,26 +18,35 @@
         android:fitsSystemWindows="true"
         tools:context=".ui.search.SearchFragment">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <LinearLayout
             android:id="@+id/collapsingToolBarLayout"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/search_background"
+            android:background="?attr/main_bg_1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="1dp"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            app:contentInsetStart="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_circle_bg"
+                android:padding="15dp"
+                android:src="@drawable/svg_back" />
+
             <SearchView
                 android:id="@+id/searchBarProduct"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/search_background"
                 android:iconifiedByDefault="false"
                 android:queryHint="根据关键字搜索" />
-        </com.google.android.material.appbar.MaterialToolbar>
-
+        </LinearLayout>
 
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
@@ -62,5 +71,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+        <com.zs.my_zs_jetpack.ui.LoadingTip
+            android:id="@+id/loadingTip"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="54dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

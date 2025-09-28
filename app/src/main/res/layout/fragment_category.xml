@@ -45,7 +45,11 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headerTitle" />
-
+        <com.zs.my_zs_jetpack.ui.LoadingTip
+            android:id="@+id/loadingTip"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="54dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

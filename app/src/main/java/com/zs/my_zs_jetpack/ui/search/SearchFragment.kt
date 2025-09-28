@@ -15,6 +15,7 @@ import com.zs.my_zs_jetpack.R
 import com.zs.my_zs_jetpack.commonAdapt.CommonArticleAdapt
 import com.zs.my_zs_jetpack.common_base.BaseFragment
 import com.zs.my_zs_jetpack.databinding.FragmentSearchBinding
+import com.zs.my_zs_jetpack.extension.clickNoRepeat
 import kotlinx.coroutines.launch
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
@@ -74,6 +75,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
             }
 
         })
+
+        binding.ivBack.clickNoRepeat {
+            findNavController().navigateUp()
+        }
     }
 
     override fun observe() {
@@ -87,15 +92,19 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         }
 
         searchVm.articles1.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) binding.loadingTip.showEmpty()
+            else binding.loadingTip.dismiss()
             searchAdapter.submitList(it)
         }
 
     }
+
     fun closeKeyboard(mEditText: SearchView, mContext: Context) {
         val imm =
             mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(mEditText.windowToken, 0)
     }
+
     override fun getLayoutId() = R.layout.fragment_search
 
 

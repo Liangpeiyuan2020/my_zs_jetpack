@@ -37,7 +37,11 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
     }
 
     private fun loadData() {
-        categoryVm.loadData(tableId)
+        if (title == "我的文章") {
+            binding.loadingTip.showEmpty()
+        } else {
+            categoryVm.loadData(tableId)
+        }
     }
 
 
