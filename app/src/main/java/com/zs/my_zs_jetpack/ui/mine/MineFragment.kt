@@ -36,6 +36,7 @@ class MineFragment : LazyBaseFragment<FragmentMineBinding>() {
             findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
         }
         binding.ivHead.clickNoRepeat {
+            findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
 //            mineVm.getInternalBean()
 //            mineVm.resetIntegralBean()
         }
@@ -55,10 +56,14 @@ class MineFragment : LazyBaseFragment<FragmentMineBinding>() {
             )
         }
         binding.clCollect.clickNoRepeat {
-            findNavController().navigate(R.id.action_mainFragment_to_collectFragment, Bundle().apply { putString("title", "我的收藏") })
+            findNavController().navigate(
+                R.id.action_mainFragment_to_collectFragment,
+                Bundle().apply { putString("title", "我的收藏") })
         }
         binding.clArticle.clickNoRepeat {
-            findNavController().navigate(R.id.action_mainFragment_to_categoryFragment, Bundle().apply { putString("title", "我的文章") })
+            findNavController().navigate(
+                R.id.action_mainFragment_to_categoryFragment,
+                Bundle().apply { putString("title", "我的文章") })
         }
 
     }

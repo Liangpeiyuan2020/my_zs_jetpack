@@ -35,6 +35,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         binding.tvLogout.clickNoRepeat {
             settingsVm.logout()
         }
+        binding.ivBack.clickNoRepeat {
+            findNavController().navigateUp()
+        }
     }
 
 }
