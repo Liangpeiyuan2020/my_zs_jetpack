@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="text_1">
+        <item name="android:textColor">?attr/theme_color_1</item>
+        <item name="android:textSize">@dimen/text_1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="text_2">
+        <item name="android:textColor">?attr/theme_color_2</item>
+        <item name="android:textSize">@dimen/text_2</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="text_3">
+        <item name="android:textColor">?attr/theme_color_3</item>
+        <item name="android:textSize">@dimen/text_3</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="text_title">
+        <item name="android:textColor">?attr/theme_color_1</item>
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Dialog.FullScreen" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+</resources>

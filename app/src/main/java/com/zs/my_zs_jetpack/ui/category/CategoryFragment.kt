@@ -1,0 +1,88 @@
+package com.zs.my_zs_jetpack.ui.category
+
+import android.os.Bundle
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.zs.my_zs_jetpack.R
+import com.zs.my_zs_jetpack.commonAdapt.ArticleAdapter
+import com.zs.my_zs_jetpack.common_base.BaseFragment
+import com.zs.my_zs_jetpack.databinding.FragmentCategoryBinding
+import com.zs.my_zs_jetpack.extension.clickNoRepeat
+import kotlinx.coroutines.launch
+
+class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
+
+    private val categoryVm: CategoryViewModel by viewModels()
+    private lateinit var categoryAdapt: ArticleAdapter
+    private var tableId: Int = 0
+    private lateinit var title: String
+
+    override fun init() {
+        super.init()
+        tableId = arguments?.getInt("tableId") ?: 0
+        title = arguments?.getString("title").toString()
+        initView()
+        loadData()
+    }
+
+    override fun onclick() {
+        super.onclick()
+        binding.ivBack.clickNoRepeat {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun loadData() {
+        if (title == "我的文章") {
+            binding.loadingTip.showEmpty()
+        } else {
+            categoryVm.loadData(tableId)
+        }
+    }
+
+
+    private fun initView() {
+        binding.tvTitle.text = title
+        categoryAdapt = ArticleAdapter(
+            onCollectClick = { article ->
+                categoryVm.handleCollection(article.id, article.collect)
+            },
+            onItemClick = {
+                findNavController().navigate(
+                    R.id.action_mainFragment_to_webFragment,
+                    Bundle().apply {
+                        putString("title", it.title)
+                        putString("loadUrl", it.link)
+                    })
+            }
+        )
+        binding.recyclerView.adapter = categoryAdapt
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        observeLoadingState(categoryAdapt)
+    }
+
+    override fun observe() {
+        super.observe()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    categoryVm.articles.collect {
+                        categoryAdapt.submitData(it)
+                    }
+                }
+                launch {
+                    categoryVm.collectionUpdates.collect {
+                        categoryAdapt.updateAdaptCollectionState(it)
+                    }
+                }
+            }
+        }
+
+    }
+
+    override fun getLayoutId() = R.layout.fragment_category
+}
