@@ -1,10 +1,10 @@
 # 文章浏览
 
-这是一个 Android 的 MVVM 文章浏览应用示例，使用 Kotlin+java 编程语言。
+这是一个 Android 的 MVVM 文章浏览应用，使用 Kotlin+java 编程语言。
 
 ### Api
 
-api是从https://www.wanandroid.com/blog/show/2获取的开放API
+api是从https://www.wanandroid.com/blog/show/2 获取的开放API
 
 ### Jetpack组件
 
